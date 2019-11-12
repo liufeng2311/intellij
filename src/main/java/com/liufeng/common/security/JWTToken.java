@@ -19,6 +19,12 @@ public class JWTToken {
     public static final String SECURITY_KEY = "bmaj1dlx4503ejdiw8jq28liu";
 
 
+    /**
+     * @param id      一般存储用户的唯一ID
+     * @param issuer  一般存储用户的姓名
+     * @param subject 一般存储用户的全部信息
+     * @return
+     */
     public static String createJWT(String id, String issuer, String subject) {
         System.out.println(id);
         System.out.println(issuer);
@@ -31,23 +37,20 @@ public class JWTToken {
                 .setSubject(subject) //设置数据
                 .setIssuer(issuer) //设置发布者
                 .signWith(signatureAlgorithm, signingKey) //设置秘钥和加密算法
-                .setExpiration(DateUtils.localDateTime2Date(LocalDateTime.now().plusMinutes(60))); //半小时过期
+                .setExpiration(DateUtils.localDateTime2Date(LocalDateTime.now().plusMinutes(60))); //一小时过期
         return builder.compact();
     }
 
-    //问题：  获取到的claims.getSubject()与存入的不一致，会带有类信息
-    public static JSONObject parseJWT(String jwt) {
-        JSONObject object = new JSONObject();
+    public static Claims parseJWT(String jwt) {
+        Claims claims = null;
         try {
-            Claims claims = Jwts.parser()
+            claims = Jwts.parser()
                     .setSigningKey(SECURITY_KEY.getBytes(StandardCharsets.UTF_8))
                     .parseClaimsJws(jwt)
                     .getBody();
-            object.put("phone", claims.getIssuer());
-            object.put("info", claims.getSubject());
         } catch (Exception e) {
-            throw new BusinessException(ResultCodeEnums.VAILD_TOKEN,"Authorization解析失败");
+            throw new BusinessException(ResultCodeEnums.VAILD_TOKEN, "Authorization解析失败");
         }
-        return object;
+        return claims;
     }
 }

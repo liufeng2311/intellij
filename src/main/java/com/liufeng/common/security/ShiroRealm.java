@@ -1,8 +1,10 @@
 package com.liufeng.common.security;
 
-import com.alibaba.fastjson.JSONObject;
+import com.alibaba.fastjson.JSON;
+import com.liufeng.common.constant.RedisKeyConstant;
 import com.liufeng.common.enums.ResultCodeEnums;
 import com.liufeng.common.exception.BusinessException;
+import com.liufeng.common.utils.EncryptUtils;
 import com.liufeng.common.utils.RedisUtils;
 import com.liufeng.domian.entity.User;
 import com.liufeng.mapper.UserMapper;
@@ -57,23 +59,20 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
         String token = (String) authenticationToken.getPrincipal(); //获取token
-        JSONObject json = JWTToken.parseJWT(token);
-        String phone = (String) json.get("phone");   //JWT解析token,获取用户ID、用户名、密码
-        User user = null;
-        if (RedisUtils.get("shrio" + phone) != null) {
-            user = (User) RedisUtils.get("shrio" + phone);
+        User info = JSON.parseObject(JWTToken.parseJWT(token).getSubject(), User.class); //获取用户信息
+        if (RedisUtils.get(RedisKeyConstant.SHIRO_KEY_PREFIX + info.getPhone()) != null) {
+            info = (User) RedisUtils.get(RedisKeyConstant.SHIRO_KEY_PREFIX + info.getPhone());
         } else {
-            user = userMapper.getUserByPhone(phone);//数据库查询验证,此处我们没有使用密码验证，若使用用户名密码验证,要对密码加密
-            if (user != null) {
-                RedisUtils.addKey("shrio" + phone, user, 5, TimeUnit.SECONDS);
+            int count = userMapper.getUserByPhoneAndPass(info.getPhone(), info.getPassword());//数据库查询验证,此处我们没有使用密码验证，若使用用户名密码验证,要对密码加密
+            if (count == 1) {
+                RedisUtils.addKey(RedisKeyConstant.SHIRO_KEY_PREFIX + info.getPhone(), info, 5, TimeUnit.SECONDS);
             } else {
                 throw new BusinessException(ResultCodeEnums.VAILD_TOKEN, "用户认证失败");
             }
         }
 
-        //SimpleAuthenticationInfo封装的是期望的用户名对应的密码,为我们接收到的token
-        SimpleAuthenticationInfo info = new SimpleAuthenticationInfo(token, token, getName());
-        //info.setCredentialsSalt(ByteSource.Util.bytes("liufeng")); 加密盐
-        return info;
+        //SimpleAuthenticationInfo为权限认证的参数,封装的是期望的用户名对应的密码,为我们接收到的token
+        SimpleAuthenticationInfo auth = new SimpleAuthenticationInfo(token, token, getName());
+        return auth;
     }
 }

@@ -3,7 +3,8 @@ package com.liufeng.common.utils;
 import com.liufeng.common.enums.ResultCodeEnums;
 import com.liufeng.common.exception.BusinessException;
 import lombok.extern.slf4j.Slf4j;
-import java.io.UnsupportedEncodingException;
+
+import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -30,12 +31,10 @@ public final class EncryptUtils {
         String encryptText = null;
         try {
             MessageDigest m = MessageDigest.getInstance("md5");
-            m.update(inputText.getBytes("UTF8"));
+            m.update(inputText.getBytes(StandardCharsets.UTF_8));
             byte s[] = m.digest();
             encryptText = hex(s);
         } catch (NoSuchAlgorithmException e) {
-            log.error("Encrypt encrypt error {}", e);
-        } catch (UnsupportedEncodingException e) {
             log.error("Encrypt encrypt error {}", e);
         }
         return encryptText;

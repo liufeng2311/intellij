@@ -48,7 +48,7 @@ public class DictController {
 
     @PostMapping("del")
     @ApiOperation(value = "根据ID删除字典表数据")
-    public ResultModel del(@RequestBody BaseId id) {
+    public ResultModel del(@RequestBody @Valid BaseId id) {
         dictService.delDict(id.getId());
         return ResultModel.success();
     }

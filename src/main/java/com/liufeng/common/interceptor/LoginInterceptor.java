@@ -13,31 +13,31 @@ import org.springframework.web.servlet.ModelAndView;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 继承HandlerInterceptor或HandlerInterceptorAdapter拦截器，com.beiming.common.config.WebMvcConfig中进行实例化和配置拦截规则
- *	用于统计方法的执行时间
+ * 拦截器、过滤器、@{@link org.aspectj.lang.annotation.Aspect} 都是AOP的实现
+ * 继承HandlerInterceptor或HandlerInterceptorAdapter实现拦截器
  */
 @Slf4j 
 public class LoginInterceptor implements  HandlerInterceptor{
 
+	//方法执行前执行
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		log.info("方法执行前");
 		request.setAttribute("startTime", LocalDateTime.now());
 		return true;  //返回true表示放行
 	}
 
+	//方法执行完后，解析视图之前执行
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
 		LocalDateTime startTime = (LocalDateTime) request.getAttribute("startTime");
-		log.info("方法执行完后，解析视图之前执行");
 	}
 
+	//视图渲染完成之后
 	@Override
 	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
 			throws Exception {
-		log.info("视图渲染完成之后");
 	}
 	
 	

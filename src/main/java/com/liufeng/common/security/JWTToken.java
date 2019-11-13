@@ -1,6 +1,5 @@
 package com.liufeng.common.security;
 
-import com.alibaba.fastjson.JSONObject;
 import com.liufeng.common.enums.ResultCodeEnums;
 import com.liufeng.common.exception.BusinessException;
 import com.liufeng.common.utils.DateUtils;

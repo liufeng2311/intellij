@@ -8,7 +8,16 @@ import java.time.format.DateTimeFormatter;
 import java.util.Date;
 
 /**
- * 时间工具类
+ * 时间工具类,主要是以java8提供的线程安全的API获取Date
+ * {@link Instant}  表示与时区无关的时刻
+ * {@link LocalDateTime}  表示与时区无关日期和时间
+ * {@link LocalDate}  表示与时区无关的日期
+ * {@link LocalTime} 表示与时区无关的时间
+ * {@link ZonedDateTime} 表示特定时区的日期和时间
+ * {@link ZoneId}和 {@link ZoneOffset}  表示时区
+ *
+ * Java8提供的时间类型通过 {@link Instant}与 {@link Date}进行转换
+ * java8时间和 {@link Instant}转换时必须添加时区
  */
 public class DateUtils {
 
@@ -21,8 +30,17 @@ public class DateUtils {
      */
     public static Date localDateTime2Date(LocalDateTime time) {
         Date date = Date.from(time.atZone(ZoneId.systemDefault()).toInstant());
+        //Date date = Date.from(time.toInstant(ZoneOffset.ofHours(8)));   //同上
         return date;
     }
+
+    /**
+     * LocalDateTime字符串转Date
+     */
+    public static Date localDateTimeString2Date(String date, String formatter){
+        return localDateTime2Date(LocalDateTime.parse(date,DateTimeFormatter.ofPattern(formatter)));
+    }
+
 
     /**
      * LocalDate转Date
@@ -59,23 +77,23 @@ public class DateUtils {
     /**
      * 判断时间是否早于某一时间
      */
-    public static void isBefore(LocalDateTime time, LocalDateTime target, String message) {
-        boolean flag = time.isBefore(target);
+    public static boolean isBefore(LocalDateTime time, LocalDateTime target, String message) {
+        return time.isBefore(target);
 
     }
 
     /**
      * 判断时间是否晚于某一时间
      */
-    public static void isAfter(LocalDateTime time, LocalDateTime target, String message) {
-        boolean flag = time.isAfter(target);
+    public static boolean isAfter(LocalDateTime time, LocalDateTime target, String message) {
+        return time.isAfter(target);
     }
 
     /**
      * 判断时间是否等于某一时间
      */
-    public static void isEqual(LocalDateTime time, LocalDateTime target, String message) {
-        boolean flag = time.isEqual(target);
+    public static boolean isEqual(LocalDateTime time, LocalDateTime target, String message) {
+        return time.isEqual(target);
     }
 
     /**
@@ -93,4 +111,6 @@ public class DateUtils {
         Period between = Period.between(start, end);
         return between;
     }
+
+
 }

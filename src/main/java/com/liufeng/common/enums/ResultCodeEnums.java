@@ -18,7 +18,7 @@ public enum ResultCodeEnums {
 	VAILD_PARAMETER("201003", ""),  //用于抛出参数逻辑上的异常，异常信息自定义
 	
 	//用户信息异常以3开头
-	USER_EXIST("30001", ""),
+	USER_EXCEPTION("30001", ""),
 	
 	//数据库异常以3开头
 	BAD_SQL_DELETE("40001", "数据库操作失败"),

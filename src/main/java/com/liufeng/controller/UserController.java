@@ -12,7 +12,6 @@ import com.liufeng.service.UserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.data.redis.RedisAutoConfiguration;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,20 +36,19 @@ public class UserController {
 
     @PostMapping("userByPhone")
     @ApiOperation(value = "根据手机号获取用户数据")
-    @PageQuery
     public ResultModel ListByType(@RequestBody @Valid UserGetRequestDTO user) {
         return ResultModel.success(userService.getUserByPhone(user.getPhone()));
     }
 
     @PostMapping("del")
-    @ApiOperation(value = "根据ID删除字典表数据")
-    public ResultModel del(@RequestBody BaseId id) {
+    @ApiOperation(value = "根据ID删除用户表数据")
+    public ResultModel del(@RequestBody @Valid BaseId id) {
         userService.delUser(id.getId());
         return ResultModel.success();
     }
 
     @PostMapping("modify")
-    @ApiOperation(value = "根据Type获取字典表数据")
+    @ApiOperation(value = "修改用户数据")
     public ResultModel listByType(@RequestBody @Valid UserModifyRequestDTO user) {
         if (user.getId() == null) {
             userService.addUser(user);

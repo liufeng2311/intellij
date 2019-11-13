@@ -10,6 +10,7 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.validation.constraints.Max;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
 
@@ -20,6 +21,7 @@ public class DictGetRequestDTO extends BasePageQuery {
 
     @ApiModelProperty(value = "字典表type值",required = true)
     @NotNull(message = "字典表类型属性不能为空")
+    @Max(value = 128, message = "字典表type长度为128")
     private String type;
 
 }

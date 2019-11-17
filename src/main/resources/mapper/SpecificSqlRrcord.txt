@@ -66,15 +66,15 @@
     <!--一对一，一对多的结果封装,一次查询出所有的结果,不存在N+1问题-->
     <!--collection标签里存放的是集合的属性,即所谓的多,association标签里存放的是对象的属性,即所谓的一-->
     <!--association标签必须放在collection表现的前面,否则会报错-->
-    <resultMap id="ListResult"   type="com.liufeng.domain.dto.response.VisitListResponseDTO" >
+    <resultMap id="ListResult"   type="com.beiming.domain.dto.response.VisitListResponseDTO" >
         <id column="id" jdbcType="VARCHAR"  property="id" />
         <result column="visitPurpose"  jdbcType="VARCHAR" property="visitPurpose"/>
         <result column="visitTime" jdbcType="TIMESTAMP"  property="visitTime"/>
         <result column="visitPersonNum"  jdbcType="INTEGER"  property="visitPersonNum"/>
-        <association property="com.liufeng.domain.entity.PersonInfos">
+        <association property="com.beiming.domain.entity.PersonInfos">
             <result column="name1"  jdbcType="VARCHAR" property="name1"/>
         </association>
-        <collection property="person" ofType="com.liufeng.domain.entity.PersonInfo">
+        <collection property="person" ofType="com.beiming.domain.entity.PersonInfo">
             <result column="name"  jdbcType="VARCHAR" property="name"/>
             <result column="position"  jdbcType="VARCHAR" property="position"/>
             <result column="phone"  jdbcType="VARCHAR" property="phone"/>

@@ -55,6 +55,12 @@ public class ExceptionAllHandler {
 	    		ResultCodeEnums.BAD_SQL_DELETE.getMessage());
 	  }
 
+	//空指针异常
+	@ExceptionHandler(NullPointerException.class)
+	public ResultModel processNullPointerException(NullPointerException ex) {
+		log.error(" error {}", ex);
+		return ResultModel.fail(ResultCodeEnums.NULL_EXCEPTION);
+	}
 	//自定义异常
 	@ExceptionHandler(BusinessException.class)
 	public ResultModel processBusinessException(BusinessException ex) {

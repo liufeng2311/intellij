@@ -38,4 +38,11 @@ public class ResultModel {
 		model.setMessage(message);
 		return model;
 	}
+
+	public static ResultModel fail(ResultCodeEnums enums) {
+		ResultModel model = new ResultModel();
+		model.setCode(enums.getCode());
+		model.setMessage(enums.getMessage());
+		return model;
+	}
 }

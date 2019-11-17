@@ -25,7 +25,7 @@ public class ShiroConfig {
     //定义路径对应的过滤器规则,匹配原则从上到下,找到第一个适合自己的，所以/**要配置在最后
     private Map<String, String> urlFilter() {
         Map<String, String> filterMap = new LinkedHashMap<>();
-        filterMap.put("/user/anon/**", "anon"); //该过滤器表示放行,anon == AnonymousFilter
+        filterMap.put("/*/anon/**", "anon"); //该过滤器表示放行,anon == AnonymousFilter
         filterMap.put("/**", "myFilter"); //出上述路径,其他路径都要使用我们自定义的过滤器
         return filterMap;
     }

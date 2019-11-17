@@ -26,6 +26,10 @@ public enum ResultCodeEnums {
 	//业务数据库异常
 	BAD_SQL_CHECK("40002", ""),
 
+	//业务数据库异常
+	NULL_EXCEPTION("40003", "空指针异常"),
+
+	//shiro验证异常
     VAILD_TOKEN("50001", "Authorization认证失败");
     private String code;
 	

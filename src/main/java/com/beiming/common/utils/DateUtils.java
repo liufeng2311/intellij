@@ -96,7 +96,15 @@ public class DateUtils {
     /**
      * 计算时间间隔(单位为日以下)
      */
-    public static Duration durationTimeLag(LocalDateTime start, LocalDateTime end){
+    public static Duration durationTimeLocalDate(LocalDateTime start, LocalDateTime end){
+        Duration between = Duration.between(start, end);
+        return between;
+    }
+
+    /**
+     * 计算时间间隔(单位为日以下)
+     */
+    public static Duration durationTimeInstant(Instant start, Instant end){
         Duration between = Duration.between(start, end);
         return between;
     }

@@ -25,8 +25,6 @@ public class JWTToken {
      * @return
      */
     public static String createJWT(String id, String issuer, String subject) {
-        System.out.println(id);
-        System.out.println(issuer);
         SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
         byte[] apiKeySecretBytes = SECURITY_KEY.getBytes(StandardCharsets.UTF_8);
         Key signingKey = new SecretKeySpec(apiKeySecretBytes, signatureAlgorithm.getJcaName());

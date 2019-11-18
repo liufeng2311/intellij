@@ -51,7 +51,7 @@ public class ShiroFilter extends AuthenticatingFilter {
     }
 
     //查看请求中是否携带token
-    private String getRequestToken(ServletRequest httpRequest){
+    public static String getRequestToken(ServletRequest httpRequest){
         HttpServletRequest request = (HttpServletRequest) httpRequest;
         String token = request.getHeader("Authorization");
         if(token == null){

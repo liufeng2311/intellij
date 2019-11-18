@@ -21,7 +21,6 @@ public class LoginInterceptor implements  HandlerInterceptor{
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws Exception {
-		request.setAttribute("startTime", LocalDateTime.now());
 		return true;  //返回true表示放行
 	}
 
@@ -29,7 +28,6 @@ public class LoginInterceptor implements  HandlerInterceptor{
 	@Override
 	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
 			ModelAndView modelAndView) throws Exception {
-		LocalDateTime startTime = (LocalDateTime) request.getAttribute("startTime");
 	}
 
 	//视图渲染完成之后

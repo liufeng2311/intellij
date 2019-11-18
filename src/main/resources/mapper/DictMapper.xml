@@ -2,14 +2,4 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beiming.mapper.DictMapper">
 
-    <resultMap id="baseMap" type="com.beiming.domian.dto.response.DictResponseListDTO">
-        <result column="type" property="type"/>
-        <collection property="list" ofType="java.lang.String">
-            <result column="desc"></result>
-        </collection>
-    </resultMap>
-
-    <select id="getDictByType" resultMap="baseMap">
-        select * from dict where type = #{type}
-    </select>
 </mapper>

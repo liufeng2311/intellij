@@ -1,6 +1,5 @@
 package com.beiming.mapper;
 
-import com.beiming.domian.dto.response.DictResponseListDTO;
 import com.beiming.domian.entity.Dict;
 import com.beiming.mapper.base.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
@@ -23,9 +22,4 @@ public interface DictMapper extends BaseMapper<Dict> {
      */
     @Select("select count(1) from dict where code = #{code} and type = #{type}")
     int getDictByCodeAndType(@Param("code") String code, @Param("type") String type);
-
-    /**
-     * 获取某一类型的数据集合
-     */
-    List<DictResponseListDTO> getDictByType(String type);
 }

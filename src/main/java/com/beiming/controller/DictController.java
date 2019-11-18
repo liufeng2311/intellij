@@ -62,10 +62,4 @@ public class DictController {
         }
         return ResultModel.success();
     }
-
-    @PostMapping("anon/byTypeList")
-    @ApiOperation(value = "根据type查询集合")
-    public ResultModel byTypeList(@RequestBody @Valid DictGetRequestDTO dict) {
-        return ResultModel.success(dictService.getDictByType(dict.getType()));
-    }
 }

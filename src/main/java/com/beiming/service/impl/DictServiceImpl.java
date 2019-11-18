@@ -1,6 +1,5 @@
 package com.beiming.service.impl;
 
-import com.beiming.domian.dto.response.DictResponseListDTO;
 import com.github.pagehelper.PageHelper;
 import com.beiming.common.enums.ResultCodeEnums;
 import com.beiming.common.exception.BusinessException;
@@ -73,12 +72,6 @@ public class DictServiceImpl implements DictService {
         int count = dictMapper.updateByPrimaryKeySelective(target);
         AssertUtils.sqlResultCheck(count);
     }
-
-    @Override
-    public List<DictResponseListDTO> getDictByType(String type) {
-        return dictMapper.getDictByType(type);
-    }
-
     //判断字典数据是否已存在
     public void existCheck(String code, String type){
         int select = dictMapper.getDictByCodeAndType(code, type);

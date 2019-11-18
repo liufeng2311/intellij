@@ -1,0 +1,14 @@
+1.mybatis一对多查询时,如果多对应的是基本类型,使用一个封装类去封装基本类型作为List的接受参数,
+    例如：统计每一个对应的所有手机号
+    private String name;
+    private List<String> phones;
+    第一步：我们先定义一个类Phone
+    private String phone;
+    第二步：定义每个人对应的所有手机号类
+    private String name;
+    private List<Phone> phones;
+2.mybatis
+    <if test = "param != null and param != ''"></if>   当参数为字符串时
+    <if test = "param != null and param.size >0"></if> 当参数为集合时
+    <if test = "param != null and param != ''"></if>   当参数为数值时
+    <if test = 'param =="1"></if>                      当判断条件为等于时,外层为单引号,里层为双引号

@@ -3,7 +3,6 @@ package com.beiming.service;
 import com.beiming.domian.dto.base.BasePageQuery;
 import com.beiming.domian.dto.request.DictGetRequestDTO;
 import com.beiming.domian.dto.request.DictModifyRequestDTO;
-import com.beiming.domian.dto.response.DictResponseListDTO;
 import com.beiming.domian.entity.Dict;
 
 import java.util.List;
@@ -43,9 +42,4 @@ public interface DictService {
      * 更新字典数据
      */
     void updateDict(DictModifyRequestDTO dict);
-
-    /**
-     * 获取某一类型的数据集合
-     */
-    List<DictResponseListDTO> getDictByType(String type);
 }

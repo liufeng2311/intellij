@@ -9,6 +9,8 @@ import com.beiming.common.exception.BusinessException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.RestController;
 
 /**
  * 自定义Shiro过滤器
@@ -16,6 +18,7 @@ import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
  * 登陆中会执行createToken()方法生成token
  * 成功则放行
  * 失败执行onLoginFailure方法
+ * 全局的异常捕获只能捕捉Controller层的异常,所以这里不能使用自定义异常
  *
  */
 public class ShiroFilter extends AuthenticatingFilter {
@@ -29,7 +32,7 @@ public class ShiroFilter extends AuthenticatingFilter {
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        return executeLogin(request, response);  //如果token不为空，执行shrio的登录方法，如果成功，则通过该过滤器，否则的话执行onLoginFailure方法
+        return executeLogin(request, response);
     }
 
 	//重写createToken方法,主要用于封装我们的登录信息到AuthenticationToken
@@ -40,11 +43,11 @@ public class ShiroFilter extends AuthenticatingFilter {
     }
 
     /**
-     * 登陆失败,直接抛出异常
+     * 登陆失败,通过Response输出信息
      */
     @Override
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
-        throw new BusinessException(ResultCodeEnums.VAILD_TOKEN,"登陆失败");
+        return false;
     }
 
     //查看请求中是否携带token
@@ -52,10 +55,10 @@ public class ShiroFilter extends AuthenticatingFilter {
         HttpServletRequest request = (HttpServletRequest) httpRequest;
         String token = request.getHeader("Authorization");
         if(token == null){
-            token = request.getParameter("token");
+            token = request.getParameter("Authorization");
         }
         if(token == null){
-            throw new BusinessException(ResultCodeEnums.VAILD_TOKEN,"Authorization为空");
+            throw new BusinessException(ResultCodeEnums.VAILD_TOKEN,"Authorization is null");
         }
         return token;
     }

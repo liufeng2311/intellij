@@ -7,7 +7,6 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
-@EnableSwagger2  //开启Swagger文档
 @EnableAsync  //开启异步任务
 @EnableScheduling //开启定时任务
 public class IntellijIdeaJavaApplication {

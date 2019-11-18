@@ -26,7 +26,13 @@ public class ShiroConfig {
     private Map<String, String> urlFilter() {
         Map<String, String> filterMap = new LinkedHashMap<>();
         filterMap.put("/*/anon/**", "anon"); //该过滤器表示放行,anon == AnonymousFilter
-        filterMap.put("/**", "myFilter"); //出上述路径,其他路径都要使用我们自定义的过滤器
+        filterMap.put("/**/swagger-ui.html/**", "anon");  //配置Swagger配置不被拦截
+        filterMap.put("/**/swagger/**", "anon");
+        filterMap.put("/**/swagger-resources/**", "anon");
+        filterMap.put("/**/v2/**", "anon");
+        filterMap.put("/**/webjars/**", "anon");
+        filterMap.put("/**/configuration/**", "anon");
+        filterMap.put("/**", "myFilter"); //除上述路径,其他路径都要使用我们自定义的过滤器
         return filterMap;
     }
 

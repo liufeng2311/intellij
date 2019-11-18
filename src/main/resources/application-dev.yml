@@ -29,3 +29,7 @@ mybatis:
 logging:
   level:
     com.liufeng.mapper: debug
+
+#设置Swagger文档是否可被查看
+swagger:
+  enable: true

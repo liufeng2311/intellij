@@ -44,7 +44,10 @@ public class RequestLogAspect {
 		if(point.getArgs() != null && point.getArgs().length > 0){
 			info.setParam(point.getArgs()[0]); //获取被调用方法的类型
 		}
-		String token = ShiroFilter.getRequestToken(request);
+		String token = request.getHeader("Authorization");
+		if(token == null){
+			token = request.getParameter("Authorization");
+		}
 		if(!StringUtils.isEmpty(token)){
 		info.setUsername(JSON.parseObject(JWTToken.parseJWT(token).getSubject(), User.class).getPhone());
 		}

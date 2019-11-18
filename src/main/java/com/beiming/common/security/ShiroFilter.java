@@ -59,7 +59,7 @@ public class ShiroFilter extends AuthenticatingFilter {
     }
 
     //查看请求中是否携带token
-    public static String getRequestToken(ServletRequest httpRequest){
+    public String getRequestToken(ServletRequest httpRequest){
         if(swagger(httpRequest)){ //上线需删掉
             return "swagger";
         }
@@ -75,7 +75,7 @@ public class ShiroFilter extends AuthenticatingFilter {
     }
 
     //判断是否为Swagger请求,//上线需删掉
-    public static boolean swagger(ServletRequest httpRequest){
+    public boolean swagger(ServletRequest httpRequest){
         HttpServletRequest request = (HttpServletRequest) httpRequest;
         String url = request.getRequestURI();
         if(Pattern.compile("/intellij/$").matcher(url).matches() || Pattern.compile("/intellij/csrf$").matcher(url).matches()){

@@ -2,61 +2,54 @@
 <configuration debug="false" scan="false" scanPeriod="1000000 seconds">
 
     <contextName>logback</contextName>
-    <!--定义参数,后面可以通过${app.name}使用-->
     <property name="app.name" value="logback_test"/>
-    <!--appender用于定义输出配置,ConsoleAppender 表示控制台输出-->
-    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
-        <!--定义了一个过滤器,在LEVEL之下的日志输出不会被打印出来-->
+    <!--定义控制台输出的格式-->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender"> <!--ConsoleAppender表示控制台-->
         <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
-            <level>INFO</level>
+            <level>INFO</level> <!--输出该级别以上的错误-->
         </filter>
-        <!--定义控制台输出格式-->
-        <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %yellow(%5p) %purple(${PID:-}) %purple([%15.15t]) %cyan(%-40.40logger{39}) : %m%n</pattern>
+        <encoder> <!--设置格式-->
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %yellow(%5p) %highlight(${PID:-}) %highlight([%15.15t]) %cyan(%-40.40logger{39}) : %m%n</pattern>
         </encoder>
     </appender>
 
-<!--    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
-        &lt;!&ndash;定义日志输出的路径&ndash;&gt;
-        &lt;!&ndash;比如通过 java -Dscheduler.manager.server.home=/path/to XXXX 配置该属性&ndash;&gt;
-        <file>${scheduler.manager.server.home}/logs/${app.name}.log</file>
-        &lt;!&ndash;定义日志滚动的策略&ndash;&gt;
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <!--定义日志输出的路径-->
+        <file>/data/project/logs/log.log</file>
+        <!--定义日志滚动的策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
-            &lt;!&ndash;定义文件滚动时的文件名的格式&ndash;&gt;
-            <fileNamePattern>${scheduler.manager.server.home}/logs/${app.name}.%d{yyyy-MM-dd.HH}.log.gz
-            </fileNamePattern>
-            &lt;!&ndash;60天的时间周期，日志量最大20GB&ndash;&gt;
+            <!--定义文件滚动时的文件名的格式-->
+            <fileNamePattern>/data/project/logs/log-%d{yyyy-MM-dd}.log</fileNamePattern>  <!--TimeBasedRollingPolicy中不能用%i-->
+            <!--保存60个文件，超过就删除旧的-->
             <maxHistory>60</maxHistory>
-            &lt;!&ndash; 该属性在 1.1.6版本后 才开始支持&ndash;&gt;
+            <!-- 该属性在 1.1.6版本后 才开始支持-->
+            <!-- 日志最大值为20G,超出会删除原有的-->
             <totalSizeCap>20GB</totalSizeCap>
         </rollingPolicy>
         <triggeringPolicy class="ch.qos.logback.core.rolling.SizeBasedTriggeringPolicy">
-            &lt;!&ndash;每个日志文件最大100MB&ndash;&gt;
+            <!--每个日志文件最大100MB-->
             <maxFileSize>100MB</maxFileSize>
         </triggeringPolicy>
-        &lt;!&ndash;定义输出格式&ndash;&gt;
+        <!--定义输出格式-->
         <encoder>
-            <pattern>%d [%thread] %-5level %logger{36} [%file : %line] - %msg%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %5p ${PID:-} [%15.15t] %-40.40logger{39} : %m%n</pattern>
         </encoder>
-    </appender>-->
+    </appender>
 
-    <!--root是默认的logger 这里设定输出级别是info-->
+    <!--root为默认的输出配置,定义了控制台和文件两种输出,同时输出到控制台和文件-->
     <root level="info">
         <appender-ref ref="console"/>
-        <!--<appender-ref ref="file"/>-->
+        <appender-ref ref="file"/>
     </root>
 
-    <logger name="com.beiming.common.aspect.RequestLogAspect" level="info"/>
+    <!--定义制定路径下的输出级别,没有定义输出格式,默认继承root-->
+    <logger name="com.beiming.common.aspect.RequestLogAspect" level="debug" additivity="false"/>
 
-    <!--通过 LoggerFactory.getLogger("mytest") 可以获取到这个logger-->
-    <!--由于这个logger自动继承了root的appender，root中已经有stdout的appender了，自己这边又引入了stdout的appender-->
-    <!--如果没有设置 additivity="false" ,就会导致一条日志在控制台输出两次的情况-->
-    <!--additivity表示要不要使用rootLogger配置的appender进行输出-->
-<!--    <logger name="mytest" level="info" additivity="false">
-        <appender-ref ref="stdout"/>
-    </logger>-->
+    <!--此处定义为控制台输出,默认也会输出root,所以会出现两次,通过additivity=false指定不使用root-->
+    <logger name="com.beiming.common.aspect.RequestLogAspect1" level="info" additivity="false">
+        <appender-ref ref="console"/>
+    </logger>
 
-    <!--由于设置了 additivity="false" ，所以输出时不会使用rootLogger的appender-->
-    <!--但是这个logger本身又没有配置appender，所以使用这个logger输出日志的话就不会输出到任何地方-->
-<!--    <logger name="mytest2" level="info" additivity="false"/>-->
+    <!--此处没有定义输出格式,也没有引用root,则配置不会输出-->
+    <logger name="com.beiming.common.aspect.RequestLogAspect2" level="info" additivity="false"/>
 </configuration>

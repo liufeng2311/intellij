@@ -16,7 +16,14 @@ public class WebMvcConfig implements WebMvcConfigurer{
 		registry.addMapping("/**")
 					.allowedHeaders("*")
 					.allowedOrigins("*")
-					.allowedMethods("*");
+					.allowedMethods("*")
+					.exposedHeaders("access-control-allow-headers",
+						"access-control-allow-methods",
+						"access-control-allow-origin",
+						"access-control-max-age",
+						"X-Frame-Options")
+					.allowCredentials(false)  //true表示浏览器访问时会写到cookie信息,我们使用的token,设置为false
+					.maxAge(3600); //用来指定本次预检请求的有效期，单位为秒。在有效期间，不用发出另一条预检请求
 	}
 
 	//配置拦截器和拦截规则

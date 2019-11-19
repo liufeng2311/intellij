@@ -26,9 +26,12 @@ spring:
 mybatis:
   mapperLocations: classpath*:mapper/*.xml
 
+#日志配置最好使用配置文件,可以更细粒度的划分,全局的配置可以在这里配置
 logging:
-  level:
-    com.liufeng.mapper: debug
+  config: src\main\resources\logback-spring.xml #指定配置文件的路径(不配置也会默认读取),IDEA使用classpath*读取不到resources下的文件
+
+
+
 
 #设置Swagger文档是否可被查看
 swagger:

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * 统一异常只能捕获Controller层抛出的异常
  * 对于Filter中的异常无法捕获,Filter中的异常会发送错误请求重定向,框架中由ErrorController处理
+ * 此处的异常需要让前端跳转至登录页
  */
 
 @RestController

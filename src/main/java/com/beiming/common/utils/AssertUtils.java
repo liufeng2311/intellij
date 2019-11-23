@@ -8,23 +8,28 @@ import com.beiming.common.exception.BusinessException;
  */
 public class AssertUtils {
 
-    public static void sqlResultCheck(int... param) {
-        boolean checkFlag = false;
-        for (Integer var : param) {
-            if (var == 0) {
-                checkFlag = true;
-                break;
-            }
-        }
-        if (checkFlag) {
-            throw new BusinessException(ResultCodeEnums.BAD_SQL_DELETE);
-        }
+    //当false时抛出异常
+    public static void checkFalse(boolean flag, ResultCodeEnums enums, String message) {
+        if (!flag) throw new BusinessException(enums, message);
     }
 
-    //为true时抛出异常
-    public static void trueCheck(boolean lean, ResultCodeEnums enmus, String message) {
-        if (lean) {
-            throw new BusinessException(enmus, message);
-        }
+    //当true时抛出异常
+    public static void checkTrue(boolean flag, ResultCodeEnums enums, String message) {
+        if (flag) throw new BusinessException(enums, message);
+    }
+
+    //当大于零时抛出异常
+    public static void checkGraterZero(int num, ResultCodeEnums enums, String message) {
+        if (num > 0) throw new BusinessException(enums, message);
+    }
+
+    //当小于零时抛出异常
+    public static void checkLessZero(int num, ResultCodeEnums enums, String message) {
+        if (num < 0) throw new BusinessException(enums, message);
+    }
+
+    //当等于0时抛出异常
+    public static void checkZero(int num, ResultCodeEnums enums, String message) {
+        if (num == 0) throw new BusinessException(enums, message);
     }
 }

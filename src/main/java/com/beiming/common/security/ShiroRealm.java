@@ -1,24 +1,22 @@
 package com.beiming.common.security;
 
 import com.alibaba.fastjson.JSON;
-import com.beiming.common.constant.RedisKeyConstant;
-import com.beiming.common.enums.ResultCodeEnums;
-import com.beiming.common.exception.BusinessException;
 import com.beiming.common.utils.RedisUtils;
-import com.beiming.domian.entity.User;
-import com.beiming.mapper.UserMapper;
+import com.beiming.modules.sys.user.domain.entity.User;
+import com.beiming.modules.sys.user.mapper.UserMapper;
 import org.apache.shiro.authc.AuthenticationInfo;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.LockedAccountException;
 import org.apache.shiro.authc.SimpleAuthenticationInfo;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 
 import java.util.HashSet;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 设置用户权限与身份信息
@@ -57,21 +55,15 @@ public class ShiroRealm extends AuthorizingRealm {
     //判断为真
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
-        String token = (String) authenticationToken.getPrincipal(); //获取token
-        User info = JSON.parseObject(JWTToken.parseJWT(token).getSubject(), User.class); //获取用户信息
-        if (RedisUtils.get(RedisKeyConstant.SHIRO_KEY_PREFIX + info.getPhone()) != null) {
-            info = (User) RedisUtils.get(RedisKeyConstant.SHIRO_KEY_PREFIX + info.getPhone());
-        } else {
-            int count = userMapper.getUserByPhoneAndPass(info.getPhone(), info.getPassword());//数据库查询验证,此处我们没有使用密码验证，若使用用户名密码验证,要对密码加密
-            if (count == 1) {
-                RedisUtils.addKey(RedisKeyConstant.SHIRO_KEY_PREFIX + info.getPhone(), info, 5, TimeUnit.SECONDS);
-            } else {
-                throw new BusinessException(ResultCodeEnums.VAILD_TOKEN, "用户认证失败");
-            }
+        String token = (String) authenticationToken.getPrincipal(); //获取需要认证的用户信息
+        User info = JSON.parseObject(JWTToken.parseJWT(token).getSubject(), User.class); //解析token,取得用户真实信息
+        String lockStatus = userMapper.getUserByPhoneAndPass(info.getId(), info.getPhone(), info.getPassword()); //获取用户账号锁定信息
+        if(!StringUtils.isEmpty(lockStatus) && lockStatus.equals(1)){
+            throw new LockedAccountException("密码已被修改或用户已被锁定");
         }
-
-        //SimpleAuthenticationInfo为权限认证的参数,封装的是期望的用户名对应的密码,为我们接收到的token
-        SimpleAuthenticationInfo auth = new SimpleAuthenticationInfo(token, token, getName());
+        //SimpleAuthenticationInfo第二个参数为密码,后期认证只使用密码验证
+        //第一个参数可通过SecurityUtils.getSubject().getPrincipal()获取,一般用于存用户信息
+        SimpleAuthenticationInfo auth = new SimpleAuthenticationInfo(info, token, getName());
         return auth;
     }
 }

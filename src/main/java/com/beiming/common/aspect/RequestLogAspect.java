@@ -2,18 +2,15 @@ package com.beiming.common.aspect;
 
 import com.alibaba.fastjson.JSON;
 import com.beiming.common.security.JWTToken;
-import com.beiming.common.security.ShiroFilter;
 import com.beiming.common.utils.DateUtils;
 import com.beiming.common.utils.IPUtils;
-import com.beiming.domian.entity.User;
-import com.beiming.domian.log.LogInfo;
-import com.beiming.service.DictService;
+import com.beiming.modules.base.domain.log.LogInfo;
+import com.beiming.modules.sys.user.domain.entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
@@ -32,7 +29,7 @@ import java.time.LocalDateTime;
 @Slf4j         //Slf4j是接口的框架定义(Simple Logging Facade For Java的简称)
 public class RequestLogAspect {
 	
-	@Pointcut("execution(* com.beiming.controller..*.*(..))")  //拦截controller里的所有接口
+	@Pointcut("execution(* com.beiming.modules.*.controller..*.*(..))")  //拦截controller里的所有接口
 	public void requestLog() {
 		
 	}

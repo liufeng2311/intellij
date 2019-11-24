@@ -1,7 +1,7 @@
 package com.beiming.modules.sys.user.controller;
 
 import com.beiming.common.utils.ResultModel;
-import com.beiming.modules.base.abscontroller.AbstractController;
+import com.beiming.modules.base.service.AbstractService;
 import com.beiming.modules.base.domain.BasePageQuery;
 import com.beiming.modules.sys.user.domain.dto.ChangePassRequestDTO;
 import com.beiming.modules.sys.user.domain.dto.UserGetRequestDTO;
@@ -20,7 +20,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("user")
 @Api(tags = "用户表相关操作")
-public class UserController extends AbstractController {
+public class UserService extends AbstractService {
 
     @Autowired
     IUserService userService;

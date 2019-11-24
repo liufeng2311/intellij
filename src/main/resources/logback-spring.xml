@@ -69,8 +69,8 @@
         <appender-ref ref="requestLog"/>
     </logger>
 
-    <!--此处定义为控制台输出,默认也会输出root,所以会出现两次,通过additivity=false指定不使用root-->
-    <logger name="com.beiming.mapper" level="debug" additivity="false">
+    <!--查看功能模块SQL日志-->
+    <logger name="com.beiming.modules" level="debug" additivity="false">
         <appender-ref ref="console"/>
     </logger>
 

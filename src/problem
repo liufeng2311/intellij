@@ -2,3 +2,5 @@
 2.shiro中定义的异常为嘛统一异常捕获器捕捉不到
        解决办法：统一异常捕获只能捕捉到Controller层的异常,不能捕获Controller层的,
   通过继承ErrorController类实现我们自己的Controller,在通过对我们自定义的异常进行统一异常捕获
+3.使用@Builder注解时需要加上@NoArgsConstructor  、@AllArgsConstructor
+4.@Size只能用于字符串

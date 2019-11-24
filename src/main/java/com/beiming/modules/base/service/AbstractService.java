@@ -1,4 +1,4 @@
-package com.beiming.modules.base.abscontroller;
+package com.beiming.modules.base.service;
 
 import com.beiming.modules.sys.user.domain.entity.User;
 import org.apache.shiro.SecurityUtils;
@@ -6,7 +6,7 @@ import org.apache.shiro.SecurityUtils;
 /**
  * Controller公共组件
  */
-public abstract class AbstractController {
+public abstract class AbstractService {
 
     /**
      * 获取用户信息

@@ -29,7 +29,7 @@ import java.time.LocalDateTime;
 @Slf4j         //Slf4j是接口的框架定义(Simple Logging Facade For Java的简称)
 public class RequestLogAspect {
 	
-	@Pointcut("execution(* com.beiming.modules.*.controller..*.*(..))")  //拦截controller里的所有接口
+	@Pointcut("execution(* com.beiming.modules..*.controller..*.*(..))")  //拦截controller里的所有接口
 	public void requestLog() {
 		
 	}

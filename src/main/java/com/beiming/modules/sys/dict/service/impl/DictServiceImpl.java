@@ -47,7 +47,6 @@ public class DictServiceImpl implements IDictService {
         BeanUtils.copyProperties(dict, target);
         target.setCreateTime(new Date());
         target.setCreateUser(uid);
-        target.setShowFlag("0"); //新增时覆盖该传参
         int insert = dictMapper.insert(target);
         AssertUtils.checkZero(insert, ResultCodeEnums.BAD_SQL_CHECK, "新增字典表数据失败");
     }

@@ -54,7 +54,7 @@ public class ShiroFilter extends AuthenticatingFilter {
      * 登陆失败,通过Response输出信息
      */
     @Override
-    protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) {
+    protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) throws RuntimeException{
         return false;
     }
 

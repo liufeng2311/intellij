@@ -54,7 +54,7 @@ public class ShiroRealm extends AuthorizingRealm {
     //然后与输入的密码对比,此处我们我们通过解析token自己进行判断,如果判断成功，返回的信息里封装输入的用户名密码,确保框架里的
     //判断为真
     @Override
-    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) {
+    protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws RuntimeException{
         String token = (String) authenticationToken.getPrincipal(); //获取需要认证的用户信息
         User info = JSON.parseObject(JWTToken.parseJWT(token).getSubject(), User.class); //解析token,取得用户真实信息
         String lockStatus = userMapper.getUserByPhoneAndPass(info.getId(), info.getPhone(), info.getPassword()); //获取用户账号锁定信息

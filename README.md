@@ -25,13 +25,13 @@
 │  |─
 │  |─
 ├─modules 功能模块
-│  ├─task  任务模块
+│  |--task  任务模块
 │      |--async            异步任务
 │      |--scheduling       定时任务
-│  |─sys   系统模块
+│  |--sys   系统模块
 │      |--dict             字典模块
 │      |--user             用户模块
-│      |--menu             菜单模块
+│      |--menu             菜单模块(人员-->部门-->权限)
 │      |--role             角色模块
 │      |--dept             部门模块
 │  |─
@@ -42,8 +42,9 @@
 │  
 ├──resources 
 │  ├─mapper SQL对应的XML文件
-|  └─application.yml 项目配置文件
-|  └─logback-spring.xml 日志配置
+|  |─application.yml 项目配置文件
+|  |─logback-spring.xml 日志配置
+|  |
 
 
 **框架选型**

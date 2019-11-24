@@ -30,7 +30,11 @@ public enum ResultCodeEnums {
 	NULL_EXCEPTION("40003", "空指针异常"),
 
 	//shiro验证异常
-    VAILD_TOKEN("50001", "Authorization认证失败");
+    VAILD_TOKEN("50001", "Authorization认证失败"),
+
+	//菜单模块异常
+	VAILD_MENU("60001", "Authorization认证失败");
+
     private String code;
 	
 	private String message;

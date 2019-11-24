@@ -1,7 +1,7 @@
 package com.beiming.modules.sys.dict.controller;
 
 import com.beiming.common.utils.ResultModel;
-import com.beiming.modules.base.abscontroller.AbstractController;
+import com.beiming.modules.base.service.AbstractService;
 import com.beiming.modules.base.domain.BasePageQuery;
 import com.beiming.modules.sys.dict.domain.dto.DictModifyDTO;
 import com.beiming.modules.sys.dict.service.IDictService;
@@ -17,7 +17,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("dict")
 @Api(tags = "字典表相关操作")
-public class DictController extends AbstractController {
+public class DictService extends AbstractService {
 
     @Autowired
     IDictService dictService;

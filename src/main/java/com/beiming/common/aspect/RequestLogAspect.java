@@ -4,8 +4,8 @@ import com.alibaba.fastjson.JSON;
 import com.beiming.common.security.JWTToken;
 import com.beiming.common.utils.DateUtils;
 import com.beiming.common.utils.IPUtils;
-import com.beiming.modules.base.domain.log.LogInfo;
-import com.beiming.modules.sys.user.domain.entity.User;
+import com.beiming.modules.base.log.LogInfo;
+import com.beiming.modules.sys.user.domain.entity.SysUser;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
@@ -46,7 +46,7 @@ public class RequestLogAspect {
 			token = request.getParameter("Authorization");
 		}
 		if(!StringUtils.isEmpty(token)){
-		info.setUsername(JSON.parseObject(JWTToken.parseJWT(token).getSubject(), User.class).getPhone());
+		info.setUsername(JSON.parseObject(JWTToken.parseJWT(token).getSubject(), SysUser.class).getPhone());
 		}
 		Instant start = Instant.now(); //方法执行开始时间
 		info.setStartTime(DateUtils.localDateTime2String(LocalDateTime.now(),DateUtils.DATETIME_FORMATTER)); //获取接口调用时间

@@ -14,8 +14,9 @@ import com.beiming.modules.base.domain.BasePageQuery;
 import com.beiming.modules.sys.user.domain.dto.ChangePassRequestDTO;
 import com.beiming.modules.sys.user.domain.dto.UserLoginRequestDTO;
 import com.beiming.modules.sys.user.domain.dto.UserModifyRequestDTO;
-import com.beiming.modules.sys.user.domain.entity.User;
-import com.beiming.modules.sys.user.mapper.UserMapper;
+import com.beiming.modules.sys.user.domain.entity.SysUser;
+import com.beiming.modules.sys.user.mapper.SysUserMapper;
+import com.beiming.modules.sys.user.service.ISysUserService;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,10 +28,10 @@ import java.util.concurrent.TimeUnit;
 import java.util.regex.Pattern;
 
 @Service
-public class UserServiceImpl implements IUserService {
+public class SysUserServiceImpl implements ISysUserService {
 
     @Autowired
-    UserMapper userMapper;
+    SysUserMapper sysUserMapper;
 
     @Autowired
     RedisUtils redisUtils;
@@ -38,7 +39,7 @@ public class UserServiceImpl implements IUserService {
     @Override
     public void addUser(Integer uid, UserModifyRequestDTO user) {
         existCheck(user.getPhone());
-        User target = new User();
+        SysUser target = new SysUser();
         BeanUtils.copyProperties(user, target);
         target.setCreateTime(new Date());
         target.setCreateUser(uid);
@@ -47,42 +48,42 @@ public class UserServiceImpl implements IUserService {
         }else {
             throw new BusinessException(ResultCodeEnums.VAILD_PARAMETER,"密码为8到16位数字和字母的组合");
         }
-        int insert = userMapper.insert(target);
+        int insert = sysUserMapper.insert(target);
         AssertUtils.checkZero(insert, ResultCodeEnums.BAD_SQL_CHECK, "新增用户表数据失败");
     }
 
     @Override
     public void updateUser(Integer uid, UserModifyRequestDTO user) {
         existCheck(user.getPhone());
-        User target = new User();
+        SysUser target = new SysUser();
         target.setPassword(null);
         BeanUtils.copyProperties(user, target);
         target.setUpdateTime(new Date());
         target.setUpdateUser(uid);
-        int update = userMapper.updateByPrimaryKeySelective(target);
+        int update = sysUserMapper.updateByPrimaryKeySelective(target);
         AssertUtils.checkZero(update, ResultCodeEnums.BAD_SQL_CHECK, "修改用户表数据失败");
     }
 
     @Override
     public void delUser(Integer id) {
-        int delete = userMapper.deleteByPrimaryKey(id);
+        int delete = sysUserMapper.deleteByPrimaryKey(id);
         AssertUtils.checkZero(delete, ResultCodeEnums.BAD_SQL_CHECK, "删除用户表数据失败");
     }
 
     @Override
-    public List<User> getAllList(BasePageQuery page) {
+    public List<SysUser> getAllList(BasePageQuery page) {
         PageHelper.startPage(page.getPageNum(),page.getPageSize());
-        return userMapper.selectAll();
+        return sysUserMapper.selectAll();
     }
 
     @Override
-    public User getUserByPhone(String phone) {
-        return userMapper.getUserByPhone(phone);
+    public SysUser getUserByPhone(String phone) {
+        return sysUserMapper.getUserByPhone(phone);
     }
 
     @Override
-    public User getUserById(Integer id) {
-        return userMapper.selectByPrimaryKey(id);
+    public SysUser getUserById(Integer id) {
+        return sysUserMapper.selectByPrimaryKey(id);
     }
 
     @Override
@@ -94,10 +95,10 @@ public class UserServiceImpl implements IUserService {
         if(verity == null || !pass.getVerifyCode().equals(verity)){
             throw new BusinessException(ResultCodeEnums.VAILD_PARAMETER, "请输入有效验证码");
         }
-        User target =new User();
+        SysUser target =new SysUser();
         target.setPassword(EncryptUtils.md5(pass.getPassword()));
         target.setUpdateTime(new Date());
-        int count = userMapper.updateByPrimaryKeySelective(target);
+        int count = sysUserMapper.updateByPrimaryKeySelective(target);
         AssertUtils.checkZero(count, ResultCodeEnums.BAD_SQL_CHECK, "修改密码失败");
     }
 
@@ -110,7 +111,7 @@ public class UserServiceImpl implements IUserService {
 
     @Override
     public String login(UserLoginRequestDTO user) {
-        User info = userMapper.getUserByPhone(user.getPhone());
+        SysUser info = sysUserMapper.getUserByPhone(user.getPhone());
         if(info == null || !EncryptUtils.md5(user.getPassword()).equals(info.getPassword())){
             throw new BusinessException(ResultCodeEnums.USER_EXCEPTION, "用户认证失败");
         }
@@ -119,7 +120,7 @@ public class UserServiceImpl implements IUserService {
 
     //判断手机号是否已存在
     public void existCheck(String phone){
-        int select = userMapper.countUserByPhone(phone);
+        int select = sysUserMapper.countUserByPhone(phone);
         if(select == 1){
             throw new BusinessException(ResultCodeEnums.USER_EXCEPTION, "用户表中已存在");
         }

@@ -14,8 +14,8 @@ import org.springframework.stereotype.Component;
 public class SchedulingTask {
 
     @Scheduled(cron = "0 0 0/1 * * ? ")  //每小时执行一次
-    public void schedulingTest(){
-        log.info("定时任务执行");
+    public void schedulingTest() {
+        log.info("定时任务执行,时间为");
     }
 
 }

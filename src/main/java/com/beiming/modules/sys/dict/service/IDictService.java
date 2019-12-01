@@ -30,7 +30,7 @@ public interface IDictService {
     /**
      * 添加字典数据
      */
-    void addDict(Integer uid, DictModifyDTO dict);
+    void addDict(DictModifyDTO dict);
 
     /**
      * 删除字典数据
@@ -40,5 +40,5 @@ public interface IDictService {
     /**
      * 更新字典数据
      */
-    void updateDict(Integer uid, DictModifyDTO dict);
+    void updateDict(DictModifyDTO dict);
 }

@@ -1,7 +1,6 @@
 package com.beiming.modules.sys.dict.controller;
 
 import com.beiming.common.utils.ResultModel;
-import com.beiming.modules.base.service.AbstractService;
 import com.beiming.modules.base.domain.BasePageQuery;
 import com.beiming.modules.sys.dict.domain.dto.DictModifyDTO;
 import com.beiming.modules.sys.dict.service.IDictService;
@@ -17,7 +16,7 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("dict")
 @Api(tags = "字典表相关操作")
-public class DictService extends AbstractService {
+public class SysDictController{
 
     @Autowired
     IDictService dictService;
@@ -52,11 +51,10 @@ public class DictService extends AbstractService {
     @PostMapping("modify")
     @ApiOperation(value = "新增/修改字典数据")
     public ResultModel ListByType(@RequestBody @Valid DictModifyDTO dict) {
-        Integer uid = getUserId();
         if (StringUtils.isEmpty(dict.getId().toString())) {
-            dictService.addDict(uid, dict);
+            dictService.addDict(dict);
         } else {
-            dictService.updateDict(uid, dict);
+            dictService.updateDict(dict);
         }
         return ResultModel.success();
     }

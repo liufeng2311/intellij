@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 public class BaseId {
 
     @ApiModelProperty(value = "ID", required = true)
-    @NotNull(message = "ID属性不能为空")
-    @Size(max = 32, message = "ID长度为32")
+    @NotNull(message = "id is null")
+    @Size(max = 32, message = "id length must be less than 32")
     private Integer id;
 }

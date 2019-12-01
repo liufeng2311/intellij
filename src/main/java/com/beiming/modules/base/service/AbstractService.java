@@ -1,10 +1,10 @@
 package com.beiming.modules.base.service;
 
-import com.beiming.modules.sys.user.domain.entity.User;
+import com.beiming.modules.sys.user.domain.entity.SysUser;
 import org.apache.shiro.SecurityUtils;
 
 /**
- * Controller公共组件
+ * Service公共父类,用于获取一些共用信息
  */
 public abstract class AbstractService {
 
@@ -12,8 +12,8 @@ public abstract class AbstractService {
      * 获取用户信息
      * @return
      */
-    protected User getUser(){
-        return (User)SecurityUtils.getSubject().getPrincipal();
+    protected SysUser getUser(){
+        return (SysUser)SecurityUtils.getSubject().getPrincipal();
     }
 
     /**

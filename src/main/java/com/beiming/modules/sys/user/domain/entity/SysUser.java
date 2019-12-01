@@ -11,7 +11,7 @@ import java.util.Date;
  */
 @Data
 @Table(name = "user")
-public class User implements Serializable {
+public class SysUser implements Serializable {
 
     private Integer id; //自增ID
 

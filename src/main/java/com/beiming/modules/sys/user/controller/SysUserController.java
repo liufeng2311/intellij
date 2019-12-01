@@ -7,7 +7,7 @@ import com.beiming.modules.sys.user.domain.dto.ChangePassRequestDTO;
 import com.beiming.modules.sys.user.domain.dto.UserGetRequestDTO;
 import com.beiming.modules.sys.user.domain.dto.UserLoginRequestDTO;
 import com.beiming.modules.sys.user.domain.dto.UserModifyRequestDTO;
-import com.beiming.modules.sys.user.service.impl.IUserService;
+import com.beiming.modules.sys.user.service.ISysUserService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
@@ -20,10 +20,10 @@ import javax.validation.Valid;
 @RestController
 @RequestMapping("user")
 @Api(tags = "用户表相关操作")
-public class UserService extends AbstractService {
+public class SysUserController extends AbstractService {
 
     @Autowired
-    IUserService userService;
+    ISysUserService userService;
 
     @PostMapping("info")
     @ApiOperation(value = "获取所有用户表数据")

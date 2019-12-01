@@ -1,18 +1,18 @@
-package com.beiming.modules.sys.user.service.impl;
+package com.beiming.modules.sys.user.service;
 
 
 import com.beiming.modules.base.domain.BasePageQuery;
 import com.beiming.modules.sys.user.domain.dto.ChangePassRequestDTO;
 import com.beiming.modules.sys.user.domain.dto.UserLoginRequestDTO;
 import com.beiming.modules.sys.user.domain.dto.UserModifyRequestDTO;
-import com.beiming.modules.sys.user.domain.entity.User;
+import com.beiming.modules.sys.user.domain.entity.SysUser;
 
 import java.util.List;
 
 /**
  * 用户表接口
  */
-public interface IUserService {
+public interface ISysUserService {
 
     /**
      * 添加用户
@@ -32,17 +32,17 @@ public interface IUserService {
     /**
      * 获取用户列表
      */
-    List<User> getAllList(BasePageQuery page);
+    List<SysUser> getAllList(BasePageQuery page);
 
     /**
      * 获取用户信息
      */
-    User getUserByPhone(String phone);
+    SysUser getUserByPhone(String phone);
 
     /**
      * 获取用户信息
      */
-    User getUserById(Integer id);
+    SysUser getUserById(Integer id);
 
     /**
      * 修改密码

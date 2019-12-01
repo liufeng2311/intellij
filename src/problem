@@ -4,3 +4,4 @@
   通过继承ErrorController类实现我们自己的Controller,在通过对我们自定义的异常进行统一异常捕获
 3.使用@Builder注解时需要加上@NoArgsConstructor  、@AllArgsConstructor
 4.@Size只能用于字符串
+5.当实体类中没有属性时,实体类对应的mapper会报错,数组下标越界

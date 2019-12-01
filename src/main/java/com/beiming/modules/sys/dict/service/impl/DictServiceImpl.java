@@ -3,6 +3,7 @@ package com.beiming.modules.sys.dict.service.impl;
 import com.beiming.common.enums.ResultCodeEnums;
 import com.beiming.common.utils.AssertUtils;
 import com.beiming.modules.base.domain.BasePageQuery;
+import com.beiming.modules.base.service.AbstractService;
 import com.beiming.modules.sys.dict.domain.dto.DictModifyDTO;
 import com.beiming.modules.sys.dict.domain.entity.Dict;
 import com.beiming.modules.sys.dict.mapper.DictMapper;
@@ -18,7 +19,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class DictServiceImpl implements IDictService {
+public class DictServiceImpl extends AbstractService implements IDictService {
 
     @Autowired
     DictMapper dictMapper;
@@ -41,24 +42,24 @@ public class DictServiceImpl implements IDictService {
     }
 
     @Override
-    public void addDict(Integer uid, DictModifyDTO dict) {
+    public void addDict(DictModifyDTO dict) {
         existCheck(dict.getCode(), dict.getType());
         Dict target = new Dict();
         BeanUtils.copyProperties(dict, target);
         target.setCreateTime(new Date());
-        target.setCreateUser(uid);
+        target.setCreateUser(getUserId());
         int insert = dictMapper.insert(target);
         AssertUtils.checkZero(insert, ResultCodeEnums.BAD_SQL_CHECK, "新增字典表数据失败");
     }
 
 
     @Override
-    public void updateDict(Integer uid, DictModifyDTO dict) {
+    public void updateDict(DictModifyDTO dict) {
         existCheck(dict.getCode(), dict.getType());
         Dict target = new Dict();
         BeanUtils.copyProperties(dict, target);
         target.setUpdateTime(new Date());
-        target.setUpdateUser(uid);
+        target.setUpdateUser(getUserId());
         int update = dictMapper.updateByPrimaryKeySelective(target);
         AssertUtils.checkZero(update, ResultCodeEnums.BAD_SQL_CHECK, "更新字典表数据失败");
     }

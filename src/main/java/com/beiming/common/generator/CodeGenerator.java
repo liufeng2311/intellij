@@ -1,3 +1,4 @@
+/*
 package com.beiming.common.generator;
 
 import com.baomidou.mybatisplus.annotation.DbType;
@@ -15,9 +16,11 @@ import com.baomidou.mybatisplus.generator.engine.FreemarkerTemplateEngine;
 
 import java.util.Scanner;
 
+*/
 /**
  *  mybatis-plus 自动生成
- */
+ *//*
+
 public class CodeGenerator {
   public static String scanner(String tip) {
     Scanner scanner = new Scanner(System.in);
@@ -83,3 +86,4 @@ public class CodeGenerator {
 
 }
 
+*/

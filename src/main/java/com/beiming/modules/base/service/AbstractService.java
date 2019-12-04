@@ -6,13 +6,13 @@ import org.apache.shiro.SecurityUtils;
 /**
  * Service公共父类,用于获取一些共用信息
  */
-public abstract class AbstractService {
+public abstract class AbstractService{
 
     /**
      * 获取用户信息
      * @return
      */
-    protected SysUser getUser(){
+    public SysUser getUser(){
         return (SysUser)SecurityUtils.getSubject().getPrincipal();
     }
 
@@ -20,7 +20,7 @@ public abstract class AbstractService {
      * 获取用户ID
      * @return
      */
-    protected Integer getUserId(){
+    public Integer getUserId(){
         return getUser().getId();
     }
 
@@ -28,7 +28,7 @@ public abstract class AbstractService {
      * 获取用户名
      * @return
      */
-    protected String getUserName(){
+    public String getUserName(){
         return getUser().getUsername();
     }
 
@@ -36,7 +36,7 @@ public abstract class AbstractService {
      * 获取用户手机号
      * @return
      */
-    protected String getUserPhone(){
+    public String getUserPhone(){
         return getUser().getPhone();
     }
 }

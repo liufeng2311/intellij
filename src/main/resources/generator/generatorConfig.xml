@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration
+        PUBLIC "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config_1_0.dtd">
+<generatorConfiguration>
+    <!--设置资源文件的引入路径，用于引入数据库的相关信息，用于EL表达式-->
+   <!-- <properties resource="src\main\resources\application-dev.yml"/>-->
+    <!--设置数据库驱动，用于连接数据库-->
+    <classPathEntry location="C:/mysql-connector-java-8.0.13.jar"/>
+    <!--context标签是逆向工程的主要配置信息 id表示工程名，可以随便起 targetRuntime表示对应的Mybatis的哪个版本-->
+    <context id="my" targetRuntime="MyBatis3">
+
+        <!--设置需要生成哪些内容-->
+        <plugin type="com.beiming.common.generator.MyPluginAdapter"></plugin>
+
+        <!--commentGenerator控制实体类生成时的注释,我们可以使用自定义的注解生成格式-->
+        <commentGenerator type="com.beiming.common.generator.MyCommentGenerator">
+            <property name="suppressDate" value="true"/><!--是否去除所有日期的注释 -->
+            <property name="suppressAllComments" value="true"/><!--是否去除所有的注释 -->
+            <property name="author" value="Liufeng"/><!--自定义信息 -->
+        </commentGenerator>
+
+        <!--连接数据库 -->
+        <jdbcConnection
+                driverClass="com.mysql.cj.jdbc.Driver"
+                connectionURL="jdbc:mysql://192.168.64.128:3306/intellij?useUnicode=true&amp;ampcharacterEncoding=UTF8&amp;zeroDateTimeBehavior=convertToNull&amp;autoReconnect=true&amp;useSSL=false"
+                userId="root"
+                password="mysql8_root"/>
+        <!--对应类型转换-->
+        <javaTypeResolver type="com.beiming.common.generator.MyJavaTypeResolver">
+            <property name="forceBigDecimals" value="false"/>   <!--是否使用BigDecimals类型-->
+            <property name="useJSR310Types" value="false"/> <!--是否使用java8时间类型-->
+        </javaTypeResolver>
+        <!--生成的model类存放的位置 -->
+        <javaModelGenerator targetPackage="com.beiming.test.domain"
+                            targetProject="src/main/java">
+            <property name="enableSubPackages" value="false"/><!--是否让schema作为包的后缀-->
+            <property name="trimStrings" value="true"/><!--是否清除前后空格-->
+        </javaModelGenerator>
+        <!--生成的mapper.xml存放的位置 -->
+        <sqlMapGenerator targetPackage="mapper"
+                         targetProject="src/main/resources">
+            <property name="enableSubPackages" value="false"/>
+        </sqlMapGenerator>
+        <!--生成的mapper存放的位置 -->
+        <javaClientGenerator
+                targetPackage="com.beiming.test.mapper" targetProject="src/main/java"
+                type="XMLMAPPER">
+            <property name="enableSubPackages" value="false"/>
+            <property name="rootInterface" value="com.beiming.modules.base.mapper.BaseMapper"/>
+        </javaClientGenerator>
+        <!--设置对那张表进行逆向生成 tableName对应数据库的表名  domainObjectName对应生成文件名-->
+        <table tableName="score_test" domainObjectName="ScoreTest"
+               enableCountByExample="false" enableUpdateByExample="false"
+               enableDeleteByExample="false" enableSelectByExample="false"
+               enableUpdateByPrimaryKey="false" enableSelectByPrimaryKey="true"
+               enableDeleteByPrimaryKey="false" enableInsert="false">
+        </table>
+    </context>
+</generatorConfiguration>

@@ -5,3 +5,5 @@
 3.使用@Builder注解时需要加上@NoArgsConstructor  、@AllArgsConstructor
 4.@Size只能用于字符串
 5.当实体类中没有属性时,实体类对应的mapper会报错,数组下标越界
+6.mybatis批量插入时,单条mysql最大为4M
+7.自动生成工具中,mybatis生成的Mapper需要手动改，因为没有生成实体类<>

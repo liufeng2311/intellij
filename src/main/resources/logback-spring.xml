@@ -70,10 +70,8 @@
     </logger>
 
     <!--查看功能模块SQL日志-->
-    <logger name="com.beiming.modules" level="debug" additivity="false">
+    <logger name="com.beiming" level="debug" additivity="false">
         <appender-ref ref="console"/>
     </logger>
 
-    <!--所有的输出都默认继承root-->
-    <!--<logger name="com.beiming.common.aspect.RequestLogAspect2" level="info"/>-->
 </configuration>

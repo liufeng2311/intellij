@@ -7,3 +7,11 @@
 5.当实体类中没有属性时,实体类对应的mapper会报错,数组下标越界
 6.mybatis批量插入时,单条mysql最大为4M
 7.自动生成工具中,mybatis生成的Mapper需要手动改，因为没有生成实体类<>
+8.IDEA中classpath不起作用,引用文件时，需要从项目根路径开始引用,分别测试了如下情况
+      java文件中读取无标记的配置文件,路径从项目根路径下开始写，可以读到文件(src/main/resources),从项目路径下开始
+      java文件中读取有标记的配置文件,路径从项目根路径下开始写，可以读到文件(src/main/resources),从项目路径下开始
+      配置文件读取有标记的配置文件,可以读到文件,从src/main/resources下开始写
+      配置文件读取无标记的配置文件,读不到文件
+      properties文件可以被标记,xml文件不能被标记
+      mybatis.mapperLocations = classpath*:mapper/**/*.xml 中的classpath可以被识别
+      配置文件中/和\都可以被识别,作用一样

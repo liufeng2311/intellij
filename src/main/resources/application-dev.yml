@@ -5,7 +5,7 @@ server:
 spring:
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://192.168.64.136:3306/intellij?useUnicode=true&characterEncoding=UTF8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+        url: jdbc:mysql://192.168.64.128:3306/intellij?useUnicode=true&characterEncoding=UTF8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
         username: root
         password: mysql8_root
         hikari:
@@ -28,7 +28,7 @@ mybatis:
 
 #日志配置最好使用配置文件,可以更细粒度的划分,全局的配置可以在这里配置
 logging:
-  config: src\main\resources\logback-spring.xml #指定配置文件的路径(不配置也会默认读取),IDEA使用classpath*读取不到resources下的文件
+  config: src/main/resources/logback-spring.xml
 
 
 

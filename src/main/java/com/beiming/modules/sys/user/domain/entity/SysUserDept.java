@@ -4,6 +4,7 @@ package com.beiming.modules.sys.user.domain.entity;
 import lombok.Data;
 
 import javax.persistence.Table;
+import java.util.Date;
 
 /**
  * 用户部门表
@@ -18,7 +19,7 @@ public class SysUserDept {
 
     private Integer userId; //用户ID
 
-    private Data createTime; //创建时间
+    private Date createTime; //创建时间
 
     private Integer createUser; //创建人
 }

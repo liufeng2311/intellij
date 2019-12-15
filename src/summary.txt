@@ -7,8 +7,13 @@
     第二步：定义每个人对应的所有手机号类
     private String name;
     private List<Phone> phones;
-2.mybatis
+2.mybatis中等于和不等于的书写
     <if test = "param != null and param != ''"></if>   当参数为字符串时
     <if test = "param != null and param.size >0"></if> 当参数为集合时
     <if test = "param != null and param != ''"></if>   当参数为数值时
     <if test = 'param =="1"></if>                      当判断条件为等于时,外层为单引号,里层为双引号
+3.Mybatis中集合可以直接用字符串传值,如下ids为用逗号分隔的字符串
+    select * from table where id in (#{ids})
+4.Mybatis以Map形式返回数据,@MapKey指定使用哪个字段作为key值
+    @MapKey("id")
+    Map<String,ScoreTest> selectByPrimaryKey1(Integer id);

@@ -15,14 +15,13 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * 所有列表的接口都需要继承该类 {@link com.beiming.domian.dto.base.BasePageQuery}
- * 如果列表需要分页则添加注解 {@link com.beiming.common.annotation.PageQuery}
+ * 分页切面(未用到)
  */
 @Aspect
 @Component
 public class PageQueryAspect {
 
-    @Pointcut("execution(* com.beiming.controller..*.*(..)) && @annotation(com.beiming.common.annotation.PageQuery)")
+    @Pointcut("execution(* com.beiming..*.controller..*.*(..)) && @annotation(com.beiming.common.annotation.PageQuery)")
     public void pageQuerycheck() {
     }
 

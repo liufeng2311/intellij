@@ -12,6 +12,7 @@
     <artifactId>intellij-idea-java</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>intellij-idea-java</name>
+    <packaging>war</packaging>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -92,6 +93,14 @@
             <groupId>org.mybatis.generator</groupId>
             <artifactId>mybatis-generator-core</artifactId>
             <version>1.4.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-tomcat</artifactId>
+            <version>2.2.1.RELEASE</version>
+            <!--<scope>provided</scope>-->  <!--表示只在编译和测试时使用-->
+            <scope>compile</scope>
         </dependency>
 
         <dependency>

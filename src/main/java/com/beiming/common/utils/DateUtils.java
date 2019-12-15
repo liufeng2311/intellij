@@ -38,6 +38,12 @@ public class DateUtils {
         return localDateTime2Date(LocalDateTime.parse(date,DateTimeFormatter.ofPattern(formatter)));
     }
 
+    /**
+     * LocalDate字符串转Date
+     */
+    public static Date localDateString2Date(String date, String formatter){
+        return localDate2Date(LocalDate.parse(date,DateTimeFormatter.ofPattern(formatter)));
+    }
 
     /**
      * LocalDate转Date

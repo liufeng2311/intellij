@@ -1,33 +1,50 @@
 package com.beiming.modules.sys.user.domain.entity;
 
-import lombok.Data;
-
-import javax.persistence.Table;
-import java.io.Serializable;
+import io.swagger.annotations.ApiModelProperty;
 import java.util.Date;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+import lombok.Data;
 
 /**
  * 用户表
+ *
+ * Author Liufeng
+ * Date 2019-12-17
  */
+
 @Data
-@Table(name = "user")
-public class SysUser implements Serializable {
+@Table(name = "sys_user")
+public class SysUser {
 
-    private Integer id; //自增ID
+    @Id
+    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @ApiModelProperty(value = "自增ID")
+    private Integer id;
 
-    private String phone; //手机号
+    @ApiModelProperty(value = "手机号")
+    private String phone;
 
-    private String username; //用户名
+    @ApiModelProperty(value = "用户名(昵称)")
+    private String username;
 
-    private String password; //密码
+    @ApiModelProperty(value = "密码")
+    private String password;
 
-    private String lockStatus; //用户状态(0--正常,1--锁定)
+    @ApiModelProperty(value = "锁定状态(0--正常   1--锁定)")
+    private String lockStatus;
 
-    private Date createTime; //创建时间
+    @ApiModelProperty(value = "创建时间")
+    private Date createTime;
 
-    private Integer createUser; //创建人
+    @ApiModelProperty(value = "创建人ID")
+    private String createUser;
 
-    private Date updateTime; //更新时间
+    @ApiModelProperty(value = "更新人")
+    private Date updateTime;
 
-    private Integer updateUser; //更新人
+    @ApiModelProperty(value = "更新人ID")
+    private Integer updateUser;
 }

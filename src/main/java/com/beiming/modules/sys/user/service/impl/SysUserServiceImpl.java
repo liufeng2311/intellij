@@ -17,10 +17,12 @@ import com.beiming.modules.sys.user.domain.dto.UserModifyRequestDTO;
 import com.beiming.modules.sys.user.domain.entity.SysUser;
 import com.beiming.modules.sys.user.mapper.SysUserMapper;
 import com.beiming.modules.sys.user.service.ISysUserService;
+import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Date;
 import java.util.List;
@@ -37,12 +39,14 @@ public class SysUserServiceImpl implements ISysUserService {
     RedisUtils redisUtils;
 
     @Override
+    @Transactional(rollbackFor = Exception.class)
     public void addUser(Integer uid, UserModifyRequestDTO user) {
         existCheck(user.getPhone());
         SysUser target = new SysUser();
         BeanUtils.copyProperties(user, target);
         target.setCreateTime(new Date());
-        target.setCreateUser(uid);
+        target.setUsername(user.getPhone());
+        target.setCreateUser(uid.toString());
         if(Pattern.compile(RegexpConstant.PASSWORD_ONE).matcher(user.getPassword()).matches()){
             target.setPassword(EncryptUtils.md5(user.getPassword()));
         }else {
@@ -72,7 +76,7 @@ public class SysUserServiceImpl implements ISysUserService {
 
     @Override
     public List<SysUser> getAllList(BasePageQuery page) {
-        PageHelper.startPage(page.getPageNum(),page.getPageSize());
+        Page<Object> objects = PageHelper.startPage(page.getPageNum(), page.getPageSize());
         return sysUserMapper.selectAll();
     }
 
@@ -124,5 +128,11 @@ public class SysUserServiceImpl implements ISysUserService {
         if(select == 1){
             throw new BusinessException(ResultCodeEnums.USER_EXCEPTION, "用户表中已存在");
         }
+    }
+
+
+    public static void main(String[] args) {
+        String admin = EncryptUtils.md5("admin1234");
+        System.out.println(admin);
     }
 }

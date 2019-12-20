@@ -54,6 +54,8 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
         topLevelClass.addImportedType("lombok.Data"); //引入@Data
         topLevelClass.addImportedType("javax.persistence.Table"); //引入@Table
         topLevelClass.addImportedType("javax.persistence.Id"); //引入@Id
+        topLevelClass.addImportedType("javax.persistence.GeneratedValue"); //引入@GeneratedValue
+        topLevelClass.addImportedType("javax.persistence.GenerationType"); //引入@GenerationType
     }
 
     /**
@@ -69,6 +71,7 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
         if(ids.contains(columnName)){  //如果字段为ID,添加空行,此处只是为了生成的实体类好看
             field.addJavaDocLine("");
             field.addJavaDocLine("@Id");
+            field.addJavaDocLine("@GeneratedValue(strategy= GenerationType.IDENTITY)");
         }
         if(StringUtils.isEmpty(remarks)){
             remarks = "ID";

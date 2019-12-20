@@ -7,7 +7,7 @@ import javax.validation.Payload;
 import java.lang.annotation.*;
 
 /**
- * 验证参数时间段
+ * 验证参数时间段注解
  */
 
 @Target(ElementType.TYPE)

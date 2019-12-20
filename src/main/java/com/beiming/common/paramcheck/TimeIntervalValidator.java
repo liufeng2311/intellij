@@ -2,11 +2,9 @@ package com.beiming.common.paramcheck;
 
 import com.beiming.common.annotation.CheckTimeInterval;
 import com.beiming.common.utils.DateUtils;
-import com.beiming.common.utils.PatternUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.StringUtils;
-
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
 

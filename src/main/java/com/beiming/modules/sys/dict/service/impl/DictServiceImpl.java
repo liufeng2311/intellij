@@ -79,7 +79,7 @@ public class DictServiceImpl extends AbstractService implements IDictService {
     //获取字典表需要展示的数据
     private List<Dict> getDict() {
         Dict dict = new Dict();
-        dict.setShowFlag("0"); //0表示可查看
+        dict.setShowFlag("0"); //0表示可查看,1表示删除
         return dictMapper.select(dict);
     }
 }

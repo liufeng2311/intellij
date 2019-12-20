@@ -7,6 +7,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import org.apache.shiro.authc.AuthenticationException;
+import org.apache.shiro.authc.CredentialsException;
 
 import javax.crypto.spec.SecretKeySpec;
 import java.nio.charset.StandardCharsets;
@@ -38,7 +40,7 @@ public class JWTToken {
         return builder.compact();
     }
 
-    public static Claims parseJWT(String jwt) {
+    public static Claims parseJWT(String jwt) throws AuthenticationException {
         Claims claims = null;
         try {
             claims = Jwts.parser()
@@ -46,7 +48,7 @@ public class JWTToken {
                     .parseClaimsJws(jwt)
                     .getBody();
         } catch (Exception e) {
-            throw new BusinessException(ResultCodeEnums.VAILD_TOKEN, "Authorization解析失败");
+            throw new CredentialsException("凭证解析异常,请重新登录");
         }
         return claims;
     }

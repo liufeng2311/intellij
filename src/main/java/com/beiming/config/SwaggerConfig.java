@@ -36,12 +36,13 @@ public class SwaggerConfig {
     params.add(tokenParam.build());
     return new Docket(DocumentationType.SWAGGER_2)
         .select()
-        .apis(RequestHandlerSelectors.basePackage("com.beiming.controller"))
+        .apis(RequestHandlerSelectors.basePackage("com.beiming.modules"))
         .paths(PathSelectors.any())
         .build()
         .globalOperationParameters(params)
         .apiInfo(apiInfo())
-        .enable(swaggerEnabled).pathMapping("");
+        .enable(swaggerEnabled)
+        .pathMapping("");
   }
 
 

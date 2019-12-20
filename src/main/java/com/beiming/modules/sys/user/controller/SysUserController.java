@@ -57,7 +57,7 @@ public class SysUserController extends AbstractService {
     @ApiOperation(value = "修改用户数据")
     public ResultModel listByType(@RequestBody @Valid UserModifyRequestDTO user) {
         Integer userId = getUserId();
-        if (StringUtils.isEmpty(user.getId().toString())) {
+        if (StringUtils.isEmpty(user.getId())) {
             userService.addUser(userId, user);
         } else {
             userService.updateUser(userId, user);

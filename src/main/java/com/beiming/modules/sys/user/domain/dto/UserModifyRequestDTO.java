@@ -18,6 +18,7 @@ public class UserModifyRequestDTO {
 
     @ApiModelProperty(value = "phone", required = true)
     @Pattern(regexp = RegexpConstant.PHONE_ONE, message = "请输入有效手机号")
+    @NotBlank
     private String phone;
 
     @ApiModelProperty(value = "姓名", required = true)
@@ -28,11 +29,6 @@ public class UserModifyRequestDTO {
 
     @ApiModelProperty(value = "用户状态", required = true)
     @NotBlank(message = "用户状态不能为空")
-    @Size(max = 128, message = "用户状态长度为1")
+    @Size(max = 1, message = "用户状态长度为1")
     private String lockStatus;
-
-    @ApiModelProperty(value = "操作人", required = true)
-    @NotBlank(message = "操作人不能为空")
-    @Size(max = 128, message = "操作人长度为128")
-    private String user;
 }

@@ -9,6 +9,7 @@ import com.beiming.common.enums.ResultCodeEnums;
 import com.beiming.common.exception.BusinessException;
 import org.apache.shiro.authc.AuthenticationException;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.authc.IncorrectCredentialsException;
 import org.apache.shiro.web.filter.authc.AuthenticatingFilter;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,9 +38,6 @@ public class ShiroFilter extends AuthenticatingFilter {
 
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
-        if(swagger(request)){   //上线需删掉
-            return true;
-        }
         return executeLogin(request, response);
     }
 
@@ -52,36 +50,27 @@ public class ShiroFilter extends AuthenticatingFilter {
 
     /**
      * 登陆失败,通过Response输出信息
+     *
      */
     @Override
     protected boolean onLoginFailure(AuthenticationToken token, AuthenticationException e, ServletRequest request, ServletResponse response) throws RuntimeException{
+        if(e != null){  //异常需要抛出,否则BusinessErrorController捕获不到
+            throw e;
+        }
         return false;
     }
 
-    //查看请求中是否携带token
+    /**
+     * 查看请求头中是否携带认证信息
+     * @param httpRequest
+     * @return
+     */
     public String getRequestToken(ServletRequest httpRequest){
-        if(swagger(httpRequest)){ //上线需删掉
-            return "swagger";
-        }
-        HttpServletRequest request = (HttpServletRequest) httpRequest;
-        String token = request.getHeader("Authorization");
+        String token = ((HttpServletRequest)httpRequest).getHeader("Authorization");
         if(token == null){
-            token = request.getParameter("Authorization");
-        }
-        if(token == null){
-            throw new BusinessException(ResultCodeEnums.VAILD_TOKEN,"Authorization is null");
+            throw new IncorrectCredentialsException("凭证信息不能为空");
         }
         return token;
-    }
-
-    //判断是否为Swagger请求,//上线需删掉
-    public boolean swagger(ServletRequest httpRequest){
-        HttpServletRequest request = (HttpServletRequest) httpRequest;
-        String url = request.getRequestURI();
-        if(Pattern.compile("/intellij/$").matcher(url).matches() || Pattern.compile("/intellij/csrf$").matcher(url).matches()){
-            return true;
-        }
-        return false;
     }
 
 }

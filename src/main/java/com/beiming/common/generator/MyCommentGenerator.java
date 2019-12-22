@@ -44,7 +44,6 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
         topLevelClass.addJavaDocLine("/**");
         topLevelClass.addJavaDocLine(" * " + remarks);
         topLevelClass.addJavaDocLine(" *");
-        topLevelClass.addJavaDocLine(" * Author " + author);
         topLevelClass.addJavaDocLine(" * Date " + dateFormatter.format(new Date()));
         topLevelClass.addJavaDocLine(" */");
         topLevelClass.addJavaDocLine("");
@@ -79,5 +78,10 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
         field.addJavaDocLine("@ApiModelProperty(value = \"" + remarks + "\")");
     }
 
-
+    /**
+     * xml不生成注释
+     */
+    @Override
+    public void addComment(XmlElement xmlElement) {
+    }
 }

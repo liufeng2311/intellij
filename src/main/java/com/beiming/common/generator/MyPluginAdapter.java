@@ -15,7 +15,7 @@ import java.util.List;
 
 /**
  * PluginAdapter用来指定是否生成指定代码, true 表示生成, false 表示不生成
- * 我们使用lombok,此处设置实体类不生成getter/setter方法
+ *
  */
 public class MyPluginAdapter extends PluginAdapter {
 
@@ -60,11 +60,58 @@ public class MyPluginAdapter extends PluginAdapter {
     }
 
     /**
-     * 配置文件中设置enableSelectByPrimaryKey为true(全部设置为false时,不生成xml)
-     * 此处关闭生成
+     * 不生成SelectByPrimaryKey(默认生成)
      */
     @Override
     public boolean sqlMapSelectByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return false;
+    }
+
+    /**
+     * 不生成ExampleWhereClause(默认生成)
+     */
+    @Override
+    public boolean sqlMapExampleWhereClauseElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return false;
+    }
+
+    /**
+     * 不生成SelectByExample(默认生成),不含BLOB属性
+     */
+    @Override
+    public boolean sqlMapSelectByExampleWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return false;
+    }
+
+    /**
+     * 不生成DeleteByExample(默认生成)
+     */
+    @Override
+    public boolean sqlMapDeleteByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return false;
+    }
+
+    /**
+     * 不生成DeleteByPrimaryKey(默认生成)
+     */
+    @Override
+    public boolean sqlMapDeleteByPrimaryKeyElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return false;
+    }
+
+    /**
+     * 不生成Insert(默认生成)
+     */
+    @Override
+    public boolean sqlMapInsertElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return false;
+    }
+
+    /**
+     * 不生成InsertSelective(默认生成)
+     */
+    @Override
+    public boolean sqlMapInsertSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
         return false;
     }
 
@@ -76,7 +123,38 @@ public class MyPluginAdapter extends PluginAdapter {
         return false;
     }
 
+    @Override
+    public boolean sqlMapUpdateByExampleSelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return false;
+    }
 
+    @Override
+    public boolean sqlMapUpdateByExampleWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return false;
+    }
+
+    @Override
+    public boolean sqlMapCountByExampleElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return false;
+    }
+
+    @Override
+    public boolean sqlMapUpdateByPrimaryKeySelectiveElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return false;
+    }
+
+    @Override
+    public boolean sqlMapUpdateByPrimaryKeyWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return false;
+    }
+
+    /**
+     * 不生成Example类
+     */
+    @Override
+    public boolean modelExampleClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
+        return false;
+    }
 
     /**
      * 生成Mapper相关配置

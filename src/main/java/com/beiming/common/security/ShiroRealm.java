@@ -2,8 +2,7 @@ package com.beiming.common.security;
 
 import com.alibaba.fastjson.JSON;
 import com.beiming.common.utils.RedisUtils;
-import com.beiming.modules.sys.user.domain.entity.SysUser;
-import com.beiming.modules.sys.user.mapper.SysUserMapper;
+import com.beiming.modules.base.domain.SysUser;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -20,8 +19,8 @@ import java.util.Set;
  */
 public class ShiroRealm extends AuthorizingRealm {
 
-    @Autowired
-    SysUserMapper sysUserMapper;
+    //@Autowired
+    //SysUserMapper sysUserMapper;
 
     @Autowired
     RedisUtils RedisUtils;
@@ -40,8 +39,8 @@ public class ShiroRealm extends AuthorizingRealm {
         SysUser user = (SysUser) principalCollection.getPrimaryPrincipal();
         //设置用户权限
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
-        Set<String> menus = sysUserMapper.getUserMenus(user.getId());
-        info.setStringPermissions(menus);
+        //Set<String> menus = sysUserMapper.getUserMenus(user.getId());
+        //info.setStringPermissions(menus);
         return info;
     }
 
@@ -53,7 +52,7 @@ public class ShiroRealm extends AuthorizingRealm {
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken authenticationToken) throws AuthenticationException {
         String token = (String) authenticationToken.getPrincipal(); //获取需要认证的用户信息
         SysUser info = JSON.parseObject(JWTToken.parseJWT(token).getSubject(), SysUser.class); //解析token,取得用户真实信息
-        String lockStatus = sysUserMapper.getUserByPhoneAndPass(info.getId(), info.getPhone(), info.getPassword()); //获取用户账号锁定信息
+        String lockStatus = "0";//获取用户账号锁定信息
         if (!StringUtils.isEmpty(lockStatus) && lockStatus.equals("1")) {
             throw new LockedAccountException("密码已被修改或用户已被锁定");
         }

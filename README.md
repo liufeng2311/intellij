@@ -1,50 +1,45 @@
 **项目说明**
 
 **项目结构**
-├─db  项目数据库表结构SQL语句
 │
 ├─common 公共模块
 │  ├─annotation     注解
-│  ├─aspect         切面(系统接口日志)
-│  ├─constant       常量(Redis前缀,常用正则)
-│  ├─enums          枚举(异常定义)
-│  ├─exception      异常(自定义异常,统一异常捕获,过滤器异常捕获)
-│  |─interceptor    拦截器,作用同切面,建议使用切面
-│  |─security       安全框架配置(shiro)
-│  |─utils          公共工具类
+│  │     ├─aspect   切面注解
+│  │     ├─param    自定义参数验证注解和逻辑
+│  ├─aspect         切面注解逻辑
+│  ├─constant       常量定义
+│  ├─enums          枚举定义
+│  ├─exception      异常处理(自定义异常、统一异常处理、其他异常处理)
+│  ├─generator      通用Mapper自动生成工具
+│  ├─security       安全框架配置(shiro)
+│  ├─utils          公共工具类
 │ 
 ├─config 配置信息
 │  ├─RedisConfig              redis配置
 │  ├─ShiroConfig              shiro配置
-│  ├─SwaggerConfig            文档配置
+│  ├─SwaggerConfig            swagger配置
 │  ├─TaskExecutorConfig       线程池配置
+│  ├─ValidatorConfig          参数验证配置
 │  ├─WebMvcConfig             MVC配置
-│  ├─
-│  |─
-│  |─
-│  |─
-│  |─
-├─modules 功能模块
-│  |--task  任务模块
-│      |--async            异步任务
-│      |--scheduling       定时任务
-│  |--sys   系统模块
-│      |--dict             字典模块
-│      |--user             用户模块
-│      |--menu             菜单模块(人员-->部门-->权限)
-│      |--role             角色模块
-│      |--dept             部门模块
-│  |─
-│  |─
-│  |─
+│
+├─modules 任务
+│  ├─base             具体功能公用属性
+│  ├─domain           公用实体类
+│  ├─log              日志输出
+│  ├─mapper           Mapper父类 
+│  ├─service          公用service
+|
+├─task 任务
+│  ├─async            异步任务
+│  ├─scheduling       定时任务
 │ 
 ├─IntellijIdeaJavaApplication 项目启动类
 │  
-├──resources 
-│  ├─mapper SQL对应的XML文件
-|  |─application.yml 项目配置文件
-|  |─logback-spring.xml 日志配置
-|  |
+├─resources 
+│  ├─generator           mybatis自动生成配置文件
+│  ├─mapper              SQL对应的XML文件
+│  ├─application.yml     项目配置文件
+│  ├─logback-spring.xml  日志配置
 
 
 **框架选型**
@@ -67,8 +62,6 @@
 **Controller模块代码规范**
 |---Controller
     |-接口命名：表名
-    |-所有不需要权限的操作命名为/anon/接口命名
-    |-继承AbstractController,用以获取用户相关信息
 |---insert
 |   |-请求方式: POST
     |-参数接受方式：@RequestBody
@@ -76,9 +69,9 @@
     |-接口命名：modify
 |---delete
 |   |-请求方式: GET
-    |-参数接收方式：@PathVariable
+    |-参数接收方式：@RequestBody
     |-效验: 
-    |-接口命名：del/{param}
+    |-接口命名：del
 |---update
 |   |-请求方式: POST
     |-参数接受方式：@RequestBody
@@ -89,4 +82,5 @@
     |-参数接受方式：@RequestBody
     |-参数效验：@Valid
     |-接口命名：info/*/{param}
+    
 **账号**

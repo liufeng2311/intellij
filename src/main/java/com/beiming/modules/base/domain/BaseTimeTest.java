@@ -1,13 +1,9 @@
 package com.beiming.modules.base.domain;
 
-import com.beiming.common.annotation.CheckTimeInterval;
-import com.fasterxml.jackson.annotation.JsonFormat;
+import com.beiming.common.annotation.param.CheckTimeInterval;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.validation.constraints.NotBlank;
 
 @Data
 @ApiModel(description = "共用时间类")

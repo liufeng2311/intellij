@@ -9,39 +9,42 @@ import javax.persistence.Table;
 import lombok.Data;
 
 /**
- * 用户表
+ * 部门表
  *
  * Author Liufeng
  * Date 2019-12-21
  */
 
 @Data
-@Table(name = "sys_user")
-public class SysUser {
+@Table(name = "sys_role")
+public class SysRole {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @ApiModelProperty(value = "自增ID")
+    @ApiModelProperty(value = "ID")
     private Integer id;
 
-    @ApiModelProperty(value = "用户名(昵称)")
-    private String username;
+    @ApiModelProperty(value = "父角色ID")
+    private Integer parentId;
 
-    @ApiModelProperty(value = "密码")
-    private String password;
+    @ApiModelProperty(value = "角色名称")
+    private String name;
 
-    @ApiModelProperty(value = "锁定状态(0--正常   1--锁定)")
-    private String lockStatus;
+    @ApiModelProperty(value = "排序")
+    private Integer order;
+
+    @ApiModelProperty(value = "删除标志(0表示正常,1表示删除)")
+    private String delFlag;
 
     @ApiModelProperty(value = "创建时间")
     private Date createTime;
 
-    @ApiModelProperty(value = "创建人ID")
+    @ApiModelProperty(value = "创建人")
     private Integer createUser;
 
     @ApiModelProperty(value = "更新时间")
     private Date updateTime;
 
-    @ApiModelProperty(value = "更新人ID")
+    @ApiModelProperty(value = "创建人")
     private Integer updateUser;
 }

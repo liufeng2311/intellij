@@ -65,7 +65,7 @@
     </root>
 
     <!--定义接口日志的输出,只输出到文件,additivity为false时表示不使用root-->
-    <logger name="com.beiming.common.aspect.RequestLogAspect" level="info" additivity="false">
+    <logger name="com.beiming.common.aspect.LogAspect" level="info" additivity="false">
         <appender-ref ref="requestLog"/>
     </logger>
 

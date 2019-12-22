@@ -14,7 +14,7 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
- * PluginAdapter用来指定是否生成指定代码, true 表示生成, false 表示不生成
+ * PluginAdapter用来指定是否生成指定代码, true表示继续执行其它插件的该方法,false表示不执行其它插件的该方法
  *
  */
 public class MyPluginAdapter extends PluginAdapter {
@@ -179,12 +179,6 @@ public class MyPluginAdapter extends PluginAdapter {
         mapperJavaFiles.add(mapper);
         }
         return mapperJavaFiles;
-    }
-
-
-    @Override
-    public List<GeneratedJavaFile> contextGenerateAdditionalJavaFiles(IntrospectedTable introspectedTable) {
-        return super.contextGenerateAdditionalJavaFiles(introspectedTable);
     }
 
 }

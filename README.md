@@ -11,6 +11,7 @@
 │  ├─enums          枚举定义
 │  ├─exception      异常处理(自定义异常、统一异常处理、其他异常处理)
 │  ├─generator      通用Mapper自动生成工具
+│  ├─interceptor    切面
 │  ├─security       安全框架配置(shiro)
 │  ├─utils          公共工具类
 │ 

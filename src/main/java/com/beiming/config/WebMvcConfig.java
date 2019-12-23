@@ -26,11 +26,11 @@ public class WebMvcConfig implements WebMvcConfigurer{
 	}
 
 	//配置拦截器和拦截规则
-	@Override
-	public void addInterceptors(InterceptorRegistry registry) {
-		registry.addInterceptor(null)
-				    .addPathPatterns("/**");
-	}
+//	@Override
+//	public void addInterceptors(InterceptorRegistry registry) {
+//		registry.addInterceptor(null)
+//				    .addPathPatterns("/**");
+//	}
 
 	//配置静态资源映射
 	@Override

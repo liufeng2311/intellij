@@ -14,7 +14,7 @@ import lombok.NoArgsConstructor;
 /**
  * 字典表
  *
- * Date 2019-12-23
+ * Date 2019-12-24
  */
 
 @Builder

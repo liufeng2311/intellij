@@ -14,4 +14,381 @@
     <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
     <result column="update_user" jdbcType="INTEGER" property="updateUser" />
   </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
+  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.dict.domain.entity.SysDict">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="code" jdbcType="VARCHAR" property="code" />
+    <result column="desc" jdbcType="VARCHAR" property="desc" />
+    <result column="value" jdbcType="VARCHAR" property="value" />
+    <result column="type" jdbcType="VARCHAR" property="type" />
+    <result column="order" jdbcType="TINYINT" property="order" />
+    <result column="show_flag" jdbcType="VARCHAR" property="showFlag" />
+    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="create_user" jdbcType="INTEGER" property="createUser" />
+    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
+  </resultMap>
 </mapper>

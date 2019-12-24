@@ -47,11 +47,11 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
         topLevelClass.addJavaDocLine(" * Date " + dateFormatter.format(new Date()));
         topLevelClass.addJavaDocLine(" */");
         topLevelClass.addJavaDocLine("");
-        topLevelClass.addJavaDocLine("@Builder");
-        topLevelClass.addJavaDocLine("@NoArgsConstructor");
-        topLevelClass.addJavaDocLine("@AllArgsConstructor");
-        topLevelClass.addJavaDocLine("@Data");
-        topLevelClass.addJavaDocLine("@Table(name = \"" + tableName + "\")");
+        topLevelClass.addAnnotation("@Builder");
+        topLevelClass.addAnnotation("@NoArgsConstructor");
+        topLevelClass.addAnnotation("@AllArgsConstructor");
+        topLevelClass.addAnnotation("@Data");
+        topLevelClass.addAnnotation("@Table(name = \"" + tableName + "\")");
         topLevelClass.addImportedType("io.swagger.annotations.ApiModelProperty"); //引入@ApiModelProperty
         topLevelClass.addImportedType("lombok.Data"); //引入@Data
         topLevelClass.addImportedType("javax.persistence.Table"); //引入@Table
@@ -76,13 +76,13 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
         String columnName = introspectedColumn.getActualColumnName();
         if(ids.contains(columnName)){  //如果字段为ID,添加空行,此处只是为了生成的实体类好看
             field.addJavaDocLine("");
-            field.addJavaDocLine("@Id");
-            field.addJavaDocLine("@GeneratedValue(strategy= GenerationType.IDENTITY)");
+            field.addAnnotation("@Id");
+            field.addAnnotation("@GeneratedValue(strategy= GenerationType.IDENTITY)");
         }
         if(StringUtils.isEmpty(remarks)){
             remarks = "ID";
         }
-        field.addJavaDocLine("@ApiModelProperty(value = \"" + remarks + "\")");
+        field.addAnnotation("@ApiModelProperty(value = \"" + remarks + "\")");
     }
 
     /**

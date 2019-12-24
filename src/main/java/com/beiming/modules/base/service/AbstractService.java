@@ -1,6 +1,6 @@
 package com.beiming.modules.base.service;
 
-import com.beiming.modules.base.domain.SysUser;
+import com.beiming.modules.sys.user.domain.entity.SysUser;
 import org.apache.shiro.SecurityUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -18,7 +18,7 @@ public abstract class AbstractService{
      * 获取用户信息
      */
     public SysUser getUser(){
-        return (SysUser)SecurityUtils.getSubject().getPrincipal();
+        return (SysUser) SecurityUtils.getSubject().getPrincipal();
     }
 
     /**

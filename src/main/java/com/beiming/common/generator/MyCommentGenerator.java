@@ -47,6 +47,9 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
         topLevelClass.addJavaDocLine(" * Date " + dateFormatter.format(new Date()));
         topLevelClass.addJavaDocLine(" */");
         topLevelClass.addJavaDocLine("");
+        topLevelClass.addJavaDocLine("@Builder");
+        topLevelClass.addJavaDocLine("@NoArgsConstructor");
+        topLevelClass.addJavaDocLine("@AllArgsConstructor");
         topLevelClass.addJavaDocLine("@Data");
         topLevelClass.addJavaDocLine("@Table(name = \"" + tableName + "\")");
         topLevelClass.addImportedType("io.swagger.annotations.ApiModelProperty"); //引入@ApiModelProperty
@@ -55,7 +58,11 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
         topLevelClass.addImportedType("javax.persistence.Id"); //引入@Id
         topLevelClass.addImportedType("javax.persistence.GeneratedValue"); //引入@GeneratedValue
         topLevelClass.addImportedType("javax.persistence.GenerationType"); //引入@GenerationType
+        topLevelClass.addImportedType("lombok.Builder"); //引入@Builder
+        topLevelClass.addImportedType("lombok.NoArgsConstructor"); //引入@NoArgsConstructor
+        topLevelClass.addImportedType("lombok.AllArgsConstructor"); //引入@AllArgsConstructor
     }
+
 
     /**
      * 生成实体类中字段的相关配置

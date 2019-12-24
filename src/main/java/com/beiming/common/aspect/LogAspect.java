@@ -1,10 +1,8 @@
 package com.beiming.common.aspect;
 
 import com.alibaba.fastjson.JSON;
-import com.beiming.common.security.JWTToken;
 import com.beiming.common.utils.DateUtils;
 import com.beiming.common.utils.IPUtils;
-import com.beiming.modules.base.domain.SysUser;
 import com.beiming.modules.base.log.LogInfo;
 import com.beiming.modules.base.service.AbstractService;
 import lombok.extern.slf4j.Slf4j;
@@ -13,7 +11,6 @@ import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 

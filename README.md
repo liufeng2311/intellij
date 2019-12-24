@@ -3,17 +3,18 @@
 **项目结构**
 │
 ├─common 公共模块
-│  ├─annotation     注解
-│  │     ├─aspect   切面注解
-│  │     ├─param    自定义参数验证注解和逻辑
-│  ├─aspect         切面注解逻辑
-│  ├─constant       常量定义
-│  ├─enums          枚举定义
-│  ├─exception      异常处理(自定义异常、统一异常处理、其他异常处理)
-│  ├─generator      通用Mapper自动生成工具
-│  ├─interceptor    切面
-│  ├─security       安全框架配置(shiro)
-│  ├─utils          公共工具类
+│  ├─annotation                              注解
+│  │     ├─aspect                            切面注解
+│  │     ├─param                             自定义参数验证注解和逻辑
+│  ├─aspect                                  切面注解逻辑
+│  ├─constant                                常量定义
+│  ├─enums                                   枚举定义
+│  ├─exception                               异常处理(自定义异常、统一异常处理、其他异常处理)
+│  ├─generator                               通用Mapper自动生成工具
+│  ├─interceptor                             拦截器
+│        ├─InsertAndUpdateInterceptor        SQL新增和修改拦截器
+│  ├─security                                安全框架配置(shiro)
+│  ├─utils                                   公共工具类
 │ 
 ├─config 配置信息
 │  ├─RedisConfig              redis配置

@@ -11,8 +11,8 @@
         <!--设置需要生成哪些内容-->
         <plugin type="com.beiming.common.generator.MyPluginAdapter">
             <property name="baseMapper" value="com.beiming.modules.base.mapper.BaseMapper"/>
-            <property name="mapperPackage" value="com.beiming.modules.sys.user.mapper"/>
-            <property name="entityPackage" value="com.beiming.modules.sys.user.domain.entity"/>
+            <property name="mapperPackage" value="com.beiming.modules.sys.dict.mapper"/>
+            <property name="entityPackage" value="com.beiming.modules.sys.dict.domain.entity"/>
             <property name="targetProject" value="src/main/java"/>
         </plugin>
 
@@ -30,19 +30,24 @@
         <javaTypeResolver type="com.beiming.common.generator.MyJavaTypeResolver"/>
 
         <!--javaModelGenerator用于生成实体类-->
-        <javaModelGenerator targetPackage="com.beiming.modules.sys.user.domain.entity"
+        <javaModelGenerator targetPackage="com.beiming.modules.sys.dict.domain.entity"
                             targetProject="src/main/java"/>
 
         <!--sqlMapGenerator用于生成sql-->
-        <sqlMapGenerator targetPackage="mapper"
+        <sqlMapGenerator targetPackage="mapper.dict"
                          targetProject="src/main/resources"/>
 
         <!--javaClientGenerator用于生成mapper-->
-        <javaClientGenerator targetPackage="com.beiming.modules.sys.user.mapper"
+        <javaClientGenerator targetPackage="com.beiming.modules.sys.dict.mapper"
                              targetProject="src/main/java"
                              type="XMLMAPPER"/>
 
         <!--tableName对应数据库的表名  domainObjectName对应生成文件名-->
-        <table tableName="sys_user" domainObjectName="SysUser"/>
+<!--        <table tableName="sys_user" domainObjectName="SysUser"/>-->
+<!--        <table tableName="sys_menu" domainObjectName="SysMenu"/>-->
+<!--        <table tableName="sys_role" domainObjectName="SysRole"/>-->
+<!--        <table tableName="sys_role_menu" domainObjectName="SysRoleMenu"/>-->
+<!--        <table tableName="sys_user_role" domainObjectName="SysUserRole"/>-->
+        <table tableName="sys_dict" domainObjectName="SysDict"/>
     </context>
 </generatorConfiguration>

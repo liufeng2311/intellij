@@ -1,5 +1,6 @@
 package com.beiming.common.generator;
 
+import io.swagger.annotations.ApiModel;
 import org.mybatis.generator.api.GeneratedJavaFile;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -7,50 +8,70 @@ import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.config.TableConfiguration;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 /**
- * PluginAdapter用来指定是否生成指定代码, true表示继续执行其它插件的该方法,false表示不执行其它插件的该方法
+ * PluginAdapter中的返回值, true表示继续执行其它插件的该方法,false表示不执行其它插件的该方法
  */
 public class MyPluginAdapter extends PluginAdapter {
 
-    private static final List<String> ids = new ArrayList<>(Arrays.asList("id", "ID", "Id")); //数据库中ID字段的定义
+    private List<String> DTOIgnore = new ArrayList<>(); //指定DTO生成时忽略哪些字段
 
-    private String baseMapper;
+    private List<String> VOIgnore = new ArrayList<>(); //指定VO生成时忽略哪些字段
 
-    private String mapperPackage;
+    {
+        DTOIgnore.add("create_time");
+        DTOIgnore.add("create_user");
+        DTOIgnore.add("update_time");
+        DTOIgnore.add("update_user");
+        VOIgnore.add("update_time");
+        VOIgnore.add("update_user");
+    }
 
-    private String entityPackage;
+    private String moduleName; //模块路径
 
-    private String controllerPackage;
+    private String baseMapper; //BaseMapper类路径
 
-    private String servicePackage;
+    private String mapperPackage; //mapper包路径
 
-    private String serviceImplPackage;
+    private String entityPackage; //entity包路径
 
-    private String targetProject;
+    private String dtoPackage; //dto包路径
 
-    private String basePackage = "user"; //基础模块名
+    private String voPackage; //vo包路径
+
+    private String controllerPackage; //controller包路径
+
+    private String servicePackage; //service包路径
+
+    private String serviceImplPackage; //serviceImpl包路径
+
+    private String javaPath = "src/main/java";
 
     @Override
     public boolean validate(List<String> list) {
         baseMapper = properties.getProperty("baseMapper");
-        mapperPackage = properties.getProperty("mapperPackage");
-        entityPackage = properties.getProperty("entityPackage");
-        targetProject = properties.getProperty("targetProject");
-        controllerPackage = properties.getProperty("controllerPackage");
-        servicePackage = properties.getProperty("servicePackage");
-        serviceImplPackage = properties.getProperty("serviceImplPackage");
+        moduleName = properties.getProperty("moduleName");
+        controllerPackage = moduleName + ".controller";
+        servicePackage = moduleName + ".service";
+        serviceImplPackage = moduleName + ".service.impl";
+        mapperPackage = moduleName + ".mapper";
+        entityPackage = moduleName + ".domain.entity";
+        dtoPackage = moduleName + ".domain.dto";
+        voPackage = moduleName + ".domain.vo";
         return true;
     }
 
 
     /**
-     * 生成Mapper相关配置
+     * 生成自定义模板
+     * controller、service、serviceImpl、mapper、domain
      *
      * @return
      */
@@ -58,14 +79,308 @@ public class MyPluginAdapter extends PluginAdapter {
     public List<GeneratedJavaFile> contextGenerateAdditionalJavaFiles(IntrospectedTable table) {
         List<GeneratedJavaFile> list = new ArrayList<GeneratedJavaFile>();
         for (TableConfiguration config : context.getTableConfigurations()) {
-            String name = config.getDomainObjectName(); //获取生成的实体类名称
+            String name = config.getDomainObjectName();  //获取数据库对应的实体类名称
             generateMapper(list, name);
             generateController(list, config, name, table);
             generateService(list, name);
             generateServiceImpl(list, name);
+            generateEntity(list, config, table);
+            generateDTO(list, config, table);
+            generateVO(list, config, table);
+            generateQueryDTO(list, config, table);
         }
         return list;
     }
+
+
+    /**
+     * 生成Controller层
+     */
+    public List<GeneratedJavaFile> generateController(List<GeneratedJavaFile> list, TableConfiguration config, String name, IntrospectedTable table) {
+        TopLevelClass topLevelClass = new TopLevelClass(controllerPackage + "." + name + "Controller");
+        topLevelClass.setVisibility(JavaVisibility.PUBLIC);
+        topLevelClass.addAnnotation("@Api" + "(tags = \"" + table.getRemarks() + "\")");
+        topLevelClass.addAnnotation("@RestController");
+        topLevelClass.addAnnotation("@RequestMapping" + "(\"" + config.getTableName().replace("_", "-") + "\")");
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("io.swagger.annotations.Api"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.web.bind.annotation.RequestMapping"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.web.bind.annotation.RestController"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.beiming.modules.sys.dict.service.SysDictService"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.factory.annotation.Autowired"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("java.util.List"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("io.swagger.annotations.ApiImplicitParam"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.web.bind.annotation.*"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("javax.validation.Valid"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("io.swagger.annotations.ApiOperation"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.web.bind.annotation.PostMapping"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.web.bind.annotation.GetMapping"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.beiming.common.utils.ResultModel"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.beiming.modules.sys.dict.domain.vo." + name + "VO"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage + "." + name + "QueryDTO"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(voPackage + "." + name + "VO"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage + "." + name + "ModifyDTO"));
+        packageFieldController(topLevelClass, name, table.getRemarks());
+        GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, javaPath, context.getJavaFormatter());
+        list.add(mapper);
+        return list;
+    }
+
+    //Controller内容拼接
+    private void packageFieldController(TopLevelClass topLevelClass, String name,  String remark){
+        String lower = name.substring(0, 1).toLowerCase() + name.substring(1);
+        Field field = new Field(lower + "Service", new FullyQualifiedJavaType(name + "Service"));
+        field.addAnnotation("@Autowired");
+        field.addJavaDocLine("");
+        topLevelClass.addField(field);
+
+        //添加list方法
+        Method list = new Method("list");
+        list.setVisibility(JavaVisibility.PUBLIC);
+        list.setReturnType( new FullyQualifiedJavaType("ResultModel"));
+        Parameter param1 = new Parameter(new FullyQualifiedJavaType(name + "QueryDTO"), "query");
+        param1.getAnnotations().add("@Valid");
+        param1.getAnnotations().add("@RequestBody");
+        list.addParameter(param1);
+        list.addBodyLine("List<" + name + "VO> list = " + lower + "Service.list(query);");
+        list.addBodyLine("return ResultModel.success(list);");
+        list.addAnnotation("@PostMapping" + "(\"list\")");
+        list.addAnnotation("@ApiOperation(value = \"" + remark.substring(0,remark.length() - 1) + "列表\")");
+        topLevelClass.addMethod(list);
+
+        //添加insert方法
+        Method insert = new Method("insert");
+        insert.setVisibility(JavaVisibility.PUBLIC);
+        insert.setReturnType( new FullyQualifiedJavaType("ResultModel"));
+        Parameter param2 = new Parameter(new FullyQualifiedJavaType(name + "ModifyDTO"), "save");
+        param2.getAnnotations().add("@Valid");
+        param2.getAnnotations().add("@RequestBody");
+        insert.addParameter(param2);
+        insert.addBodyLine(lower + "Service.insert(save);");
+        insert.addBodyLine("return ResultModel.success();");
+        insert.addAnnotation("@PostMapping" + "(\"insert\")");
+        insert.addAnnotation("@ApiOperation(value = \"" + remark.substring(0,remark.length() - 1) + "新增\")");
+        topLevelClass.addMethod(insert);
+
+        //添加update方法
+        Method update = new Method("update");
+        update.setVisibility(JavaVisibility.PUBLIC);
+        update.setReturnType( new FullyQualifiedJavaType("ResultModel"));
+        Parameter param3 = new Parameter(new FullyQualifiedJavaType(name + "ModifyDTO"), "update");
+        param3.getAnnotations().add("@Valid");
+        param3.getAnnotations().add("@RequestBody");
+        update.addParameter(param3);
+        update.addBodyLine(lower + "Service.update(update);");
+        update.addBodyLine("return ResultModel.success();");
+        update.addAnnotation("@PostMapping" + "(\"update\")");
+        update.addAnnotation("@ApiOperation(value = \"" + remark.substring(0,remark.length() - 1) + "修改\")");
+        topLevelClass.addMethod(update);
+
+        //添加info方法
+        Method info = new Method("info");
+        info.setVisibility(JavaVisibility.PUBLIC);
+        info.setReturnType( new FullyQualifiedJavaType("ResultModel"));
+        Parameter param4 = new Parameter(new FullyQualifiedJavaType("Integer"), "id");
+        param4.getAnnotations().add("@PathVariable(\"id\")");
+        info.addParameter(param4);
+        info.addBodyLine(name + "VO info = " + lower + "Service.info(id);");
+        info.addBodyLine("return ResultModel.success(info);");
+        info.addAnnotation("@GetMapping" + "(\"info/{id}\")");
+        info.addAnnotation("@ApiOperation(value = \"" + remark.substring(0,remark.length() - 1) + "回显\")");
+        info.addAnnotation("@ApiImplicitParam(name = \"id\", value = \"id\", required = true)");
+        topLevelClass.addMethod(info);
+
+        //添加delete方法
+        Method delete = new Method("delete");
+        delete.setVisibility(JavaVisibility.PUBLIC);
+        delete.setReturnType( new FullyQualifiedJavaType("ResultModel"));
+        delete.addParameter(new Parameter(new FullyQualifiedJavaType("List<Integer>"), "delete"));
+        delete.addBodyLine(lower + "Service.delete(delete);");
+        delete.addBodyLine("return ResultModel.success();");
+        delete.addAnnotation("@PostMapping" + "(\"delete\")");
+        delete.addAnnotation("@ApiOperation(value = \"" + remark.substring(0,remark.length() - 1) + "删除\")");
+        topLevelClass.addMethod(delete);
+
+    }
+
+
+    /**
+     * 生成Service层
+     *
+     * @return
+     */
+    public List<GeneratedJavaFile> generateService(List<GeneratedJavaFile> list, String name) {
+        Interface service = new Interface(servicePackage + "." + name + "Service");
+        service.setVisibility(JavaVisibility.PUBLIC);
+        service.addImportedType(new FullyQualifiedJavaType(dtoPackage + "." + name + "QueryDTO"));
+        service.addImportedType(new FullyQualifiedJavaType(voPackage + "." + name + "VO"));
+        service.addImportedType(new FullyQualifiedJavaType(dtoPackage + "." + name + "ModifyDTO"));
+        service.addImportedType(new FullyQualifiedJavaType("java.util.List"));
+        packageService(service, name);
+        GeneratedJavaFile mapper = new GeneratedJavaFile(service, javaPath, context.getJavaFormatter());
+        list.add(mapper);
+        return list;
+    }
+
+    //Service内容拼接
+    private void packageService(Interface service, String name){
+        //添加list方法
+        Method list = new Method("list");
+        list.setVisibility(JavaVisibility.PUBLIC);
+        list.setReturnType( new FullyQualifiedJavaType("List<" + name + "VO>"));
+        list.addParameter(new Parameter(new FullyQualifiedJavaType(name + "QueryDTO"), "query"));
+        list.setAbstract(true);
+        list.addJavaDocLine("");
+        list.addJavaDocLine("/**");
+        list.addJavaDocLine(" * 列表");
+        list.addJavaDocLine(" */");
+        service.addMethod(list);
+
+        //添加insert方法
+        Method insert = new Method("insert");
+        insert.setVisibility(JavaVisibility.PUBLIC);
+        insert.addParameter(new Parameter(new FullyQualifiedJavaType(name + "ModifyDTO"), "save"));
+        insert.setAbstract(true);
+        insert.addJavaDocLine("/**");
+        insert.addJavaDocLine(" * 新增");
+        insert.addJavaDocLine(" */");
+        service.addMethod(insert);
+
+        //添加update方法
+        Method update = new Method("update");
+        update.setVisibility(JavaVisibility.PUBLIC);
+        update.addParameter(new Parameter(new FullyQualifiedJavaType(name + "ModifyDTO"), "update"));
+        update.setAbstract(true);
+        update.addJavaDocLine("/**");
+        update.addJavaDocLine(" * 更新");
+        update.addJavaDocLine(" */");
+        service.addMethod(update);
+
+        //添加info方法
+        Method info = new Method("info");
+        info.setVisibility(JavaVisibility.PUBLIC);
+        info.setReturnType( new FullyQualifiedJavaType(name + "VO"));
+        info.addParameter(new Parameter(new FullyQualifiedJavaType("Integer"), "id"));
+        info.setAbstract(true);
+        info.addJavaDocLine("/**");
+        info.addJavaDocLine(" * 详情");
+        info.addJavaDocLine(" */");
+        service.addMethod(info);
+
+        //添加delete方法
+        Method delete = new Method("delete");
+        delete.setVisibility(JavaVisibility.PUBLIC);
+        delete.addParameter(new Parameter(new FullyQualifiedJavaType("List<Integer>"), "delete"));
+        delete.setAbstract(true);
+        delete.addJavaDocLine("/**");
+        delete.addJavaDocLine(" * 删除");
+        delete.addJavaDocLine(" */");
+        service.addMethod(delete);
+    }
+
+    //ServiceImpl内容拼接
+    private void packageServiceImpl(TopLevelClass topLevelClass, String name, String lower){
+        //添加list方法
+        Method list = new Method("list");
+        list.setVisibility(JavaVisibility.PUBLIC);
+        list.setReturnType( new FullyQualifiedJavaType("List<" + name + "VO>"));
+        list.addParameter(new Parameter(new FullyQualifiedJavaType(name + "QueryDTO"), "query"));
+        list.addAnnotation("@Override");
+        list.addBodyLine(name + " target = new " + name + "();");
+        list.addBodyLine("BeanUtils.copyProperties(query, target);");
+        list.addBodyLine("List<" + name + "> list = " +lower+ "Mapper.select(target);");
+        list.addBodyLine("List<" + name + "VO> collect = list.stream().map(x -> dto2vo(x)).collect(Collectors.toList());");
+        list.addBodyLine("return collect;");
+        topLevelClass.addMethod(list);
+
+        //添加insert方法
+        Method insert = new Method("insert");
+        insert.setVisibility(JavaVisibility.PUBLIC);
+        insert.addParameter(new Parameter(new FullyQualifiedJavaType(name + "ModifyDTO"), "save"));
+        insert.addAnnotation("@Override");
+        insert.addBodyLine(name + " target = new " + name + "();");
+        insert.addBodyLine("BeanUtils.copyProperties(save, target);");
+        insert.addBodyLine(lower+ "Mapper.insert(target);");
+        topLevelClass.addMethod(insert);
+
+        //添加update方法
+        Method update = new Method("update");
+        update.setVisibility(JavaVisibility.PUBLIC);
+        update.addParameter(new Parameter(new FullyQualifiedJavaType(name + "ModifyDTO"), "update"));
+        update.addAnnotation("@Override");
+        update.addBodyLine(name + " target = new " + name + "();");
+        update.addBodyLine("BeanUtils.copyProperties(update, target);");
+        update.addBodyLine(lower+ "Mapper.updateByPrimaryKeySelective(target);");
+        topLevelClass.addMethod(update);
+
+        //添加info方法
+        Method info = new Method("info");
+        info.setVisibility(JavaVisibility.PUBLIC);
+        info.setReturnType( new FullyQualifiedJavaType(name + "VO"));
+        info.addParameter(new Parameter(new FullyQualifiedJavaType("Integer"), "id"));
+        info.addAnnotation("@Override");
+        info.addBodyLine(name + " " + lower + " = " + lower+ "Mapper.selectByPrimaryKey(id);");
+        info.addBodyLine(name + "VO " + lower + "VO = dto2vo(" + lower + ");");
+        info.addBodyLine("return " + lower + "VO;");
+        topLevelClass.addMethod(info);
+
+        //添加delete方法
+        Method delete = new Method("delete");
+        delete.setVisibility(JavaVisibility.PUBLIC);
+        delete.addParameter(new Parameter(new FullyQualifiedJavaType("List<Integer>"), "delete"));
+        delete.addAnnotation("@Override");
+        delete.addBodyLine("for(Integer id : delete){");
+        delete.addBodyLine(lower+ "Mapper.deleteByPrimaryKey(id);");
+        delete.addBodyLine("}");
+        topLevelClass.addMethod(delete);
+
+        //添加dto2vo
+        Method dto2vo = new Method("dto2vo");
+        dto2vo.setVisibility(JavaVisibility.PRIVATE);
+        dto2vo.setReturnType(new FullyQualifiedJavaType(name + "VO"));
+        dto2vo.addParameter(new Parameter(new FullyQualifiedJavaType(name), "source"));
+        dto2vo.addBodyLine(name + "VO target = new " + name + "VO();");
+        dto2vo.addBodyLine("BeanUtils.copyProperties(source, target);");
+        dto2vo.addBodyLine("return target;");
+        dto2vo.addJavaDocLine("//DTO转VO");
+        topLevelClass.addMethod(dto2vo);
+    }
+
+    /**
+     * 生成ServiceImpl层
+     *
+     * @return
+     */
+    public List<GeneratedJavaFile> generateServiceImpl(List<GeneratedJavaFile> list, String name) {
+        String lower = name.substring(0, 1).toLowerCase() + name.substring(1);
+        TopLevelClass topLevelClass = new TopLevelClass(serviceImplPackage + "." + name + "ServiceImpl");
+        topLevelClass.setVisibility(JavaVisibility.PUBLIC);
+        FullyQualifiedJavaType daoSuperType = new FullyQualifiedJavaType(name + "Service");
+        topLevelClass.addSuperInterface(daoSuperType);
+        topLevelClass.setSuperClass(new FullyQualifiedJavaType("AbstractService"));
+        topLevelClass.addAnnotation("@Service");
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(servicePackage + "." + name + "Service"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.BeanUtils"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("java.util.stream.Collectors;"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.stereotype.Service"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.beiming.modules.base.service.AbstractService"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.beiming.modules.sys.dict.mapper.SysDictMapper"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.factory.annotation.Autowired"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage + "." + name + "QueryDTO"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(voPackage + "." + name + "VO"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(entityPackage + "." + name));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage + "." + name + "ModifyDTO"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("java.util.List"));
+        Field field = new Field(lower + "Mapper", new FullyQualifiedJavaType(name + "Mapper"));
+        field.addJavaDocLine("");
+        field.addAnnotation("@Autowired");
+        topLevelClass.addField(field);
+        packageServiceImpl(topLevelClass, name ,lower);
+        GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, javaPath, context.getJavaFormatter());
+        list.add(mapper);
+        return list;
+    }
+
+
 
     /**
      * 生成Mapper层
@@ -78,7 +393,7 @@ public class MyPluginAdapter extends PluginAdapter {
         mapperInterface.setVisibility(JavaVisibility.PUBLIC);
         FullyQualifiedJavaType daoSuperType = new FullyQualifiedJavaType(target);
         mapperInterface.addSuperInterface(daoSuperType);
-        GeneratedJavaFile mapper = new GeneratedJavaFile(mapperInterface, targetProject, context.getJavaFormatter());
+        GeneratedJavaFile mapper = new GeneratedJavaFile(mapperInterface, javaPath, context.getJavaFormatter());
         mapperInterface.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Mapper"));
         mapperInterface.addImportedType(new FullyQualifiedJavaType(entityPackage + "." + name));
         mapperInterface.addImportedType(new FullyQualifiedJavaType(baseMapper));
@@ -88,67 +403,134 @@ public class MyPluginAdapter extends PluginAdapter {
     }
 
     /**
-     * 生成Controller层
+     * 生成Entity
      */
-    public List<GeneratedJavaFile> generateController(List<GeneratedJavaFile> list, TableConfiguration config, String name, IntrospectedTable table) {
-        String url = basePackage + "/" + config.getTableName().replace("_", "-");
-        TopLevelClass topLevelClass = new TopLevelClass(controllerPackage + "." + name + "Controller");
+    public List<GeneratedJavaFile> generateEntity(List<GeneratedJavaFile> list, TableConfiguration config, IntrospectedTable table) {
+        TopLevelClass topLevelClass = new TopLevelClass(entityPackage + "." + config.getDomainObjectName());
+        topLevelClass.addField(packageFieldKeyModel(table.getPrimaryKeyColumns().get(0)));
+        for(IntrospectedColumn column : table.getBaseColumns()){
+            topLevelClass.addField(packageFieldModel(column,0));
+        }
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
-        topLevelClass.addAnnotation("@Api" + "(tags = \"" + table.getRemarks() + "\")");
-        topLevelClass.addAnnotation("@RestController");
-        topLevelClass.addAnnotation("@RequestMapping" + "(\"" + url + "\")");
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("io.swagger.annotations.Api"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.web.bind.annotation.RequestMapping"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.web.bind.annotation.RestController"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.beiming.modules.sys.dict.service.SysDictService"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.factory.annotation.Autowired"));
-        Field field = new Field(name + "Service", new FullyQualifiedJavaType(name + "Service"));
-        field.addAnnotation("@Autowired");
-        field.addJavaDocLine("");
-        topLevelClass.addField(field);
-        GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, targetProject, context.getJavaFormatter());
+        topLevelClass.addAnnotation("@Builder");
+        topLevelClass.addAnnotation("@NoArgsConstructor");
+        topLevelClass.addAnnotation("@AllArgsConstructor");
+        topLevelClass.addAnnotation("@Data");
+        topLevelClass.addAnnotation("@Table(name = \"" + table.getTableConfiguration().getTableName() + "\")");
+        topLevelClass.addImportedType("io.swagger.annotations.ApiModelProperty"); //引入@ApiModelProperty
+        topLevelClass.addImportedType("lombok.Data"); //引入@Data
+        topLevelClass.addImportedType("javax.persistence.Table"); //引入@Table
+        topLevelClass.addImportedType("javax.persistence.Id"); //引入@Id
+        topLevelClass.addImportedType("javax.persistence.GeneratedValue"); //引入@GeneratedValue
+        topLevelClass.addImportedType("javax.persistence.GenerationType"); //引入@GenerationType
+        topLevelClass.addImportedType("lombok.Builder"); //引入@Builder
+        topLevelClass.addImportedType("java.util.Date"); //引入@Builder
+        topLevelClass.addImportedType("lombok.NoArgsConstructor"); //引入@NoArgsConstructor
+        topLevelClass.addImportedType("lombok.AllArgsConstructor"); //引入@AllArgsConstructor
+        GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, javaPath, context.getJavaFormatter());
         list.add(mapper);
         return list;
     }
 
     /**
-     * 生成Service层
-     *
-     * @return
+     * 生成DTO
      */
-    public List<GeneratedJavaFile> generateService(List<GeneratedJavaFile> list, String name) {
-        Interface service = new Interface(servicePackage + "." + name + "Service");
-        service.setVisibility(JavaVisibility.PUBLIC);
-        GeneratedJavaFile mapper = new GeneratedJavaFile(service, targetProject, context.getJavaFormatter());
+    public List<GeneratedJavaFile> generateDTO(List<GeneratedJavaFile> list, TableConfiguration config, IntrospectedTable table) {
+        TopLevelClass topLevelClass = new TopLevelClass(dtoPackage + "." + config.getDomainObjectName()+ "ModifyDTO");
+        topLevelClass.addField(packageFieldModel(table.getPrimaryKeyColumns().get(0), 0));
+        for(IntrospectedColumn column : table.getBaseColumns()){
+            if(DTOIgnore.contains(column.getActualColumnName())){
+                break;
+            }
+            topLevelClass.addField(packageFieldModel(column, 1));
+        }
+        topLevelClass.setVisibility(JavaVisibility.PUBLIC);
+        topLevelClass.addAnnotation("@ApiModel(description = \"" + table.getRemarks() + "DTO\")");
+        topLevelClass.addAnnotation("@Data");
+        topLevelClass.addImportedType("io.swagger.annotations.ApiModel;"); //引入@ApiModel
+        topLevelClass.addImportedType("io.swagger.annotations.ApiModelProperty"); //引入@ApiModelProperty
+        topLevelClass.addImportedType("lombok.Data"); //引入@Data
+        topLevelClass.addImportedType("java.util.Date"); //引入@Builder
+        topLevelClass.addImportedType("javax.validation.constraints.*");
+        GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, javaPath, context.getJavaFormatter());
         list.add(mapper);
         return list;
     }
 
     /**
-     * 生成ServiceImpl层
-     *
-     * @return
+     * 生成VO
      */
-    public List<GeneratedJavaFile> generateServiceImpl(List<GeneratedJavaFile> list, String name) {
-        TopLevelClass topLevelClass = new TopLevelClass(serviceImplPackage + "." + name + "ServiceImpl");
+    public List<GeneratedJavaFile> generateVO(List<GeneratedJavaFile> list, TableConfiguration config, IntrospectedTable table) {
+        TopLevelClass topLevelClass = new TopLevelClass(voPackage + "." + config.getDomainObjectName()+ "VO");
+        topLevelClass.addField(packageFieldModel(table.getPrimaryKeyColumns().get(0), 0));
+        for(IntrospectedColumn column : table.getBaseColumns()){
+            if(VOIgnore.contains(column.getActualColumnName())){
+                break;
+            }
+            topLevelClass.addField(packageFieldModel(column, 0));
+        }
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
-        FullyQualifiedJavaType daoSuperType = new FullyQualifiedJavaType(name + "Service");
-        topLevelClass.addSuperInterface(daoSuperType);
-        topLevelClass.setSuperClass(new FullyQualifiedJavaType("AbstractService"));
-        topLevelClass.addAnnotation("@Service");
-        Field field = new Field(name + "Mapper", new FullyQualifiedJavaType(name + "Mapper"));
-        field.addJavaDocLine("");
-        field.addAnnotation("@Autowired");
-        topLevelClass.addField(field);
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.stereotype.Service"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.beiming.modules.base.service.AbstractService"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType(servicePackage + "." + name + "Service"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.beiming.modules.sys.dict.mapper.SysDictMapper"));
-        GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, targetProject, context.getJavaFormatter());
+        topLevelClass.addAnnotation("@ApiModel(description = \"" + table.getRemarks() + "VO\")");
+        topLevelClass.addAnnotation("@Data");
+        topLevelClass.addImportedType("io.swagger.annotations.ApiModel;"); //引入@ApiModel
+        topLevelClass.addImportedType("io.swagger.annotations.ApiModelProperty"); //引入@ApiModelProperty
+        topLevelClass.addImportedType("lombok.Data"); //引入@Data
+        topLevelClass.addImportedType("java.util.Date"); //引入@Builder
+        GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, javaPath, context.getJavaFormatter());
         list.add(mapper);
         return list;
     }
 
+    /**
+     * 生成QueryDTO
+     */
+    public List<GeneratedJavaFile> generateQueryDTO(List<GeneratedJavaFile> list, TableConfiguration config, IntrospectedTable table) {
+        TopLevelClass topLevelClass = new TopLevelClass(dtoPackage + "." + config.getDomainObjectName()+ "QueryDTO");
+        topLevelClass.addField(packageFieldModel(table.getPrimaryKeyColumns().get(0), 0));
+        for(IntrospectedColumn column : table.getBaseColumns()){
+            if(VOIgnore.contains(column.getActualColumnName())){
+                break;
+            }
+            topLevelClass.addField(packageFieldModel(column, 0));
+        }
+        topLevelClass.setVisibility(JavaVisibility.PUBLIC);
+        topLevelClass.addAnnotation("@ApiModel(description = \"" + table.getRemarks() + "QueryDTO\")");
+        topLevelClass.addAnnotation("@Data");
+        topLevelClass.addImportedType("io.swagger.annotations.ApiModel;"); //引入@ApiModel
+        topLevelClass.addImportedType("io.swagger.annotations.ApiModelProperty"); //引入@ApiModelProperty
+        topLevelClass.addImportedType("lombok.Data"); //引入@Data
+        topLevelClass.addImportedType("java.util.Date"); //引入@Builder
+        GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, javaPath, context.getJavaFormatter());
+        list.add(mapper);
+        return list;
+    }
+
+    //包装实体类非主键属性
+    private Field packageFieldModel(IntrospectedColumn column, Integer type){
+        Field field = new Field(column.getJavaProperty(), column.getFullyQualifiedJavaType());
+        field.setVisibility(JavaVisibility.PUBLIC);
+        field.addAnnotation("@ApiModelProperty(value = \"" + column.getRemarks() + "\")");
+        if(1 == type){
+            field.addAnnotation("@Max(value = " +column.getLength()+ " ,message = \"" +column.getActualColumnName()+ "最大长度为"+ column.getLength() +"\")");
+            if(!column.isNullable() && column.getFullyQualifiedJavaType().getFullyQualifiedName().equals("java.lang.String")){
+                field.addAnnotation("@NotBlank(message = \"" + column.getRemarks() + "不能为空\")");
+            }else if(!column.isNullable() && column.getFullyQualifiedJavaType().getFullyQualifiedName().equals("java.lang.Integer")){
+                field.addAnnotation("@NotNull(message = \"" + column.getRemarks() + "不能为空\")");
+            }
+        }
+        return field;
+    }
+
+    //包装实体类主键属性,当type=1时表示生成DTO
+    private Field packageFieldKeyModel(IntrospectedColumn column){
+        Field field = new Field(column.getJavaProperty(), column.getFullyQualifiedJavaType());
+        field.setVisibility(JavaVisibility.PUBLIC);
+        field.addJavaDocLine("");
+        field.addAnnotation("@Id");
+        field.addAnnotation("@GeneratedValue(strategy= GenerationType.IDENTITY)");
+        field.addAnnotation("@ApiModelProperty(value = \"" + column.getRemarks() + "\")");
+        return field;
+    }
 
     /**
      * 不生成get方法
@@ -267,4 +649,6 @@ public class MyPluginAdapter extends PluginAdapter {
     public boolean modelExampleClassGenerated(TopLevelClass topLevelClass, IntrospectedTable introspectedTable) {
         return false;
     }
+
+
 }

@@ -11,8 +11,13 @@
         <!--设置需要生成哪些内容-->
         <plugin type="com.beiming.common.generator.MyPluginAdapter">
             <property name="baseMapper" value="com.beiming.modules.base.mapper.BaseMapper"/>
-            <property name="moduleName" value="com.beiming.modules.sys.dict"/>
+            <property name="abstractService" value="com.beiming.modules.base.service.AbstractService"/>
+            <property name="modulePath" value="com.beiming.modules.sys.dict"/>
         </plugin>
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
 
         <!--连接数据库 -->
         <jdbcConnection

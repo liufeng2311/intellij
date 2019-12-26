@@ -33,7 +33,10 @@ public enum ResultCodeEnums {
     VAILD_TOKEN("50001", "Authorization认证失败"),
 
 	//菜单模块异常
-	VAILD_MENU("60001", "Authorization认证失败");
+	VAILD_MENU("60001", "Authorization认证失败"),
+
+	//权限异常
+	SHIRO_MENU("70001", "权限不足,非法访问");
 
     private String code;
 	

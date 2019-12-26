@@ -12,7 +12,8 @@
     <artifactId>intellij-idea-java</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>intellij-idea-java</name>
-    <packaging>war</packaging>
+    <packaging>jar</packaging>
+    <!--<packaging>war</packaging>-->
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -118,9 +119,50 @@
 
     <build>
         <plugins>
-            <plugin>
+            <plugin>   <!--打包时只打包自己的内容-->
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <executable>true</executable>  <!--设置linux服务启动,可通过./xxx.jar启动-->
+                    <layout>ZIP</layout>
+                    <includes>
+                        <include>
+                            <groupId>${groupId}</groupId>
+                            <artifactId>${artifactId}</artifactId>
+                        </include>
+                    </includes>
+                </configuration>
+            </plugin>
+            <plugin> <!--将项目依赖的jar输出到指定的lib目录下-->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-dependencies</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>
+                                ${project.build.directory}/lib
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin> <!-- 项目启动时,加载lib下的内容-->
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>lib/</classpathPrefix>
+                            <mainClass>com.beiming.IntellijIdeaJavaApplication</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
             </plugin>
         </plugins>
     </build>

@@ -1,6 +1,5 @@
 package com.beiming.common.generator;
 
-import io.swagger.annotations.ApiModel;
 import org.mybatis.generator.api.GeneratedJavaFile;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -8,15 +7,11 @@ import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.config.TableConfiguration;
-import org.springframework.web.bind.annotation.RequestBody;
-
-import javax.validation.Valid;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
+ * 定义我们自己的PluginAdapter插件
  * PluginAdapter中的返回值, true表示继续执行其它插件的该方法,false表示不执行其它插件的该方法
  */
 public class MyPluginAdapter extends PluginAdapter {
@@ -25,6 +20,8 @@ public class MyPluginAdapter extends PluginAdapter {
 
     private List<String> VOIgnore = new ArrayList<>(); //指定VO生成时忽略哪些字段
 
+    private List<String> sqlKeyWord = new ArrayList<>(); //指定VO生成时忽略哪些字段
+
     {
         DTOIgnore.add("create_time");
         DTOIgnore.add("create_user");
@@ -32,11 +29,13 @@ public class MyPluginAdapter extends PluginAdapter {
         DTOIgnore.add("update_user");
         VOIgnore.add("update_time");
         VOIgnore.add("update_user");
+        sqlKeyWord.add("order");
+        sqlKeyWord.add("desc");
     }
 
-    private String moduleName; //模块路径
+    private String modulePath; //模块路径
 
-    private String baseMapper; //BaseMapper类路径
+    private String baseMapper; //BaseMapper类全路径
 
     private String mapperPackage; //mapper包路径
 
@@ -52,19 +51,24 @@ public class MyPluginAdapter extends PluginAdapter {
 
     private String serviceImplPackage; //serviceImpl包路径
 
+    private String abstractService; //serviceImpl包路径
+
+
+
     private String javaPath = "src/main/java";
 
     @Override
     public boolean validate(List<String> list) {
         baseMapper = properties.getProperty("baseMapper");
-        moduleName = properties.getProperty("moduleName");
-        controllerPackage = moduleName + ".controller";
-        servicePackage = moduleName + ".service";
-        serviceImplPackage = moduleName + ".service.impl";
-        mapperPackage = moduleName + ".mapper";
-        entityPackage = moduleName + ".domain.entity";
-        dtoPackage = moduleName + ".domain.dto";
-        voPackage = moduleName + ".domain.vo";
+        abstractService = properties.getProperty("abstractService");
+        modulePath = properties.getProperty("modulePath");
+        controllerPackage = modulePath + ".controller.";
+        servicePackage = modulePath + ".service.";
+        serviceImplPackage = modulePath + ".service.impl.";
+        mapperPackage = modulePath + ".mapper.";
+        entityPackage = modulePath + ".domain.entity.";
+        dtoPackage = modulePath + ".domain.dto.";
+        voPackage = modulePath + ".domain.vo.";
         return true;
     }
 
@@ -79,15 +83,15 @@ public class MyPluginAdapter extends PluginAdapter {
     public List<GeneratedJavaFile> contextGenerateAdditionalJavaFiles(IntrospectedTable table) {
         List<GeneratedJavaFile> list = new ArrayList<GeneratedJavaFile>();
         for (TableConfiguration config : context.getTableConfigurations()) {
-            String name = config.getDomainObjectName();  //获取数据库对应的实体类名称
-            generateMapper(list, name);
-            generateController(list, config, name, table);
-            generateService(list, name);
-            generateServiceImpl(list, name);
-            generateEntity(list, config, table);
-            generateDTO(list, config, table);
-            generateVO(list, config, table);
-            generateQueryDTO(list, config, table);
+            String name = config.getDomainObjectName();     //获取table标签中定义的实体类名称
+            generateDTO(list, config, table);               //生成DTO
+            generateVO(list, config, table);                //生成VO
+            generateQueryDTO(list, config, table);          //生成QueryDTO
+            generateMapper(list, name);                     //生成Mapper
+            generateController(list, config, name, table);  //生成Controller
+            generateService(list, name);                    //生成Service
+            generateServiceImpl(list, name);                //生成ServiceImpl
+            generateEntity(list, config, table);            //生成Entity
         }
         return list;
     }
@@ -97,38 +101,45 @@ public class MyPluginAdapter extends PluginAdapter {
      * 生成Controller层
      */
     public List<GeneratedJavaFile> generateController(List<GeneratedJavaFile> list, TableConfiguration config, String name, IntrospectedTable table) {
-        TopLevelClass topLevelClass = new TopLevelClass(controllerPackage + "." + name + "Controller");
+        String[] split = modulePath.split("\\.");
+        String prefix = split[split.length - 1] +":";
+        TopLevelClass topLevelClass = new TopLevelClass(controllerPackage + name + "Controller");
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
-        topLevelClass.addAnnotation("@Api" + "(tags = \"" + table.getRemarks() + "\")");
+        topLevelClass.addAnnotation("@Api(tags = \"" + table.getRemarks() + "\")");
         topLevelClass.addAnnotation("@RestController");
-        topLevelClass.addAnnotation("@RequestMapping" + "(\"" + config.getTableName().replace("_", "-") + "\")");
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("io.swagger.annotations.Api"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.web.bind.annotation.RequestMapping"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.web.bind.annotation.RestController"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.beiming.modules.sys.dict.service.SysDictService"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.factory.annotation.Autowired"));
+        topLevelClass.addAnnotation("@RequestMapping(\"" + config.getTableName().replace("_", "-") + "\")");
+        topLevelClass.addAnnotation("//@RequiresRoles({\"" + prefix + config.getTableName().replace("_", "-") + "\"})");
         topLevelClass.addImportedType(new FullyQualifiedJavaType("java.util.List"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.apache.shiro.authz.annotation.RequiresRoles"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("io.swagger.annotations.Api"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("io.swagger.annotations.ApiImplicitParam"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.web.bind.annotation.*"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("javax.validation.Valid"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("io.swagger.annotations.ApiOperation"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.web.bind.annotation.PostMapping"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.web.bind.annotation.GetMapping"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.web.bind.annotation.*"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.factory.annotation.Autowired"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("javax.validation.Valid"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("com.beiming.common.utils.ResultModel"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.beiming.modules.sys.dict.domain.vo." + name + "VO"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage + "." + name + "QueryDTO"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType(voPackage + "." + name + "VO"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage + "." + name + "ModifyDTO"));
-        packageFieldController(topLevelClass, name, table.getRemarks());
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage + name + "QueryDTO"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(voPackage + name + "VO"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(servicePackage + name + "Service"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage + name + "ModifyDTO"));
+        packageController(topLevelClass, name, table.getRemarks());
         GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, javaPath, context.getJavaFormatter());
         list.add(mapper);
         return list;
     }
 
     //Controller内容拼接
-    private void packageFieldController(TopLevelClass topLevelClass, String name,  String remark){
-        String lower = name.substring(0, 1).toLowerCase() + name.substring(1);
-        Field field = new Field(lower + "Service", new FullyQualifiedJavaType(name + "Service"));
+    private void packageController(TopLevelClass topLevelClass, String name, String remark) {
+        //属性定义
+        String serviceName = lowerFirst(name) + "Service";
+        String serviceType = name + "Service";
+        String returnType = "ResultModel";
+        String queryDTOName = name + "QueryDTO";
+        String modifyDTOName = name + "ModifyDTO";
+        String tableName = remark.substring(0, remark.length() - 1); //表注释
+
+        //属性注入
+        Field field = new Field(serviceName, new FullyQualifiedJavaType(serviceType));
         field.addAnnotation("@Autowired");
         field.addJavaDocLine("");
         topLevelClass.addField(field);
@@ -136,68 +147,68 @@ public class MyPluginAdapter extends PluginAdapter {
         //添加list方法
         Method list = new Method("list");
         list.setVisibility(JavaVisibility.PUBLIC);
-        list.setReturnType( new FullyQualifiedJavaType("ResultModel"));
-        Parameter param1 = new Parameter(new FullyQualifiedJavaType(name + "QueryDTO"), "query");
+        list.setReturnType(new FullyQualifiedJavaType(returnType));
+        Parameter param1 = new Parameter(new FullyQualifiedJavaType(queryDTOName), "query");
         param1.getAnnotations().add("@Valid");
         param1.getAnnotations().add("@RequestBody");
         list.addParameter(param1);
-        list.addBodyLine("List<" + name + "VO> list = " + lower + "Service.list(query);");
+        list.addBodyLine("List<" + name + "VO> list = " + serviceName + ".list(query);");
         list.addBodyLine("return ResultModel.success(list);");
-        list.addAnnotation("@PostMapping" + "(\"list\")");
-        list.addAnnotation("@ApiOperation(value = \"" + remark.substring(0,remark.length() - 1) + "列表\")");
+        list.addAnnotation("@PostMapping(\"list\")");
+        list.addAnnotation("@ApiOperation(value = \"" + tableName + "列表\")");
         topLevelClass.addMethod(list);
 
         //添加insert方法
         Method insert = new Method("insert");
         insert.setVisibility(JavaVisibility.PUBLIC);
-        insert.setReturnType( new FullyQualifiedJavaType("ResultModel"));
-        Parameter param2 = new Parameter(new FullyQualifiedJavaType(name + "ModifyDTO"), "save");
+        insert.setReturnType(new FullyQualifiedJavaType(returnType));
+        Parameter param2 = new Parameter(new FullyQualifiedJavaType(modifyDTOName), "save");
         param2.getAnnotations().add("@Valid");
         param2.getAnnotations().add("@RequestBody");
         insert.addParameter(param2);
-        insert.addBodyLine(lower + "Service.insert(save);");
+        insert.addBodyLine(serviceName + ".insert(save);");
         insert.addBodyLine("return ResultModel.success();");
-        insert.addAnnotation("@PostMapping" + "(\"insert\")");
-        insert.addAnnotation("@ApiOperation(value = \"" + remark.substring(0,remark.length() - 1) + "新增\")");
+        insert.addAnnotation("@PostMapping(\"insert\")");
+        insert.addAnnotation("@ApiOperation(value = \"" + tableName + "新增\")");
         topLevelClass.addMethod(insert);
 
         //添加update方法
         Method update = new Method("update");
         update.setVisibility(JavaVisibility.PUBLIC);
-        update.setReturnType( new FullyQualifiedJavaType("ResultModel"));
-        Parameter param3 = new Parameter(new FullyQualifiedJavaType(name + "ModifyDTO"), "update");
+        update.setReturnType(new FullyQualifiedJavaType(returnType));
+        Parameter param3 = new Parameter(new FullyQualifiedJavaType(modifyDTOName), "update");
         param3.getAnnotations().add("@Valid");
         param3.getAnnotations().add("@RequestBody");
         update.addParameter(param3);
-        update.addBodyLine(lower + "Service.update(update);");
+        update.addBodyLine(serviceName + ".update(update);");
         update.addBodyLine("return ResultModel.success();");
-        update.addAnnotation("@PostMapping" + "(\"update\")");
-        update.addAnnotation("@ApiOperation(value = \"" + remark.substring(0,remark.length() - 1) + "修改\")");
+        update.addAnnotation("@PostMapping(\"update\")");
+        update.addAnnotation("@ApiOperation(value = \"" + tableName + "修改\")");
         topLevelClass.addMethod(update);
 
         //添加info方法
         Method info = new Method("info");
         info.setVisibility(JavaVisibility.PUBLIC);
-        info.setReturnType( new FullyQualifiedJavaType("ResultModel"));
+        info.setReturnType(new FullyQualifiedJavaType(returnType));
         Parameter param4 = new Parameter(new FullyQualifiedJavaType("Integer"), "id");
         param4.getAnnotations().add("@PathVariable(\"id\")");
         info.addParameter(param4);
-        info.addBodyLine(name + "VO info = " + lower + "Service.info(id);");
+        info.addBodyLine(name + "VO info = " + serviceName + ".info(id);");
         info.addBodyLine("return ResultModel.success(info);");
-        info.addAnnotation("@GetMapping" + "(\"info/{id}\")");
-        info.addAnnotation("@ApiOperation(value = \"" + remark.substring(0,remark.length() - 1) + "回显\")");
+        info.addAnnotation("@GetMapping(\"info/{id}\")");
+        info.addAnnotation("@ApiOperation(value = \"" + tableName + "回显\")");
         info.addAnnotation("@ApiImplicitParam(name = \"id\", value = \"id\", required = true)");
         topLevelClass.addMethod(info);
 
         //添加delete方法
         Method delete = new Method("delete");
         delete.setVisibility(JavaVisibility.PUBLIC);
-        delete.setReturnType( new FullyQualifiedJavaType("ResultModel"));
+        delete.setReturnType(new FullyQualifiedJavaType(returnType));
         delete.addParameter(new Parameter(new FullyQualifiedJavaType("List<Integer>"), "delete"));
-        delete.addBodyLine(lower + "Service.delete(delete);");
+        delete.addBodyLine(serviceName + ".delete(delete);");
         delete.addBodyLine("return ResultModel.success();");
-        delete.addAnnotation("@PostMapping" + "(\"delete\")");
-        delete.addAnnotation("@ApiOperation(value = \"" + remark.substring(0,remark.length() - 1) + "删除\")");
+        delete.addAnnotation("@PostMapping(\"delete\")");
+        delete.addAnnotation("@ApiOperation(value = \"" + tableName + "删除\")");
         topLevelClass.addMethod(delete);
 
     }
@@ -209,12 +220,12 @@ public class MyPluginAdapter extends PluginAdapter {
      * @return
      */
     public List<GeneratedJavaFile> generateService(List<GeneratedJavaFile> list, String name) {
-        Interface service = new Interface(servicePackage + "." + name + "Service");
+        Interface service = new Interface(servicePackage + name + "Service");
         service.setVisibility(JavaVisibility.PUBLIC);
-        service.addImportedType(new FullyQualifiedJavaType(dtoPackage + "." + name + "QueryDTO"));
-        service.addImportedType(new FullyQualifiedJavaType(voPackage + "." + name + "VO"));
-        service.addImportedType(new FullyQualifiedJavaType(dtoPackage + "." + name + "ModifyDTO"));
         service.addImportedType(new FullyQualifiedJavaType("java.util.List"));
+        service.addImportedType(new FullyQualifiedJavaType(dtoPackage + name + "QueryDTO"));
+        service.addImportedType(new FullyQualifiedJavaType(voPackage + name + "VO"));
+        service.addImportedType(new FullyQualifiedJavaType(dtoPackage + name + "ModifyDTO"));
         packageService(service, name);
         GeneratedJavaFile mapper = new GeneratedJavaFile(service, javaPath, context.getJavaFormatter());
         list.add(mapper);
@@ -222,11 +233,11 @@ public class MyPluginAdapter extends PluginAdapter {
     }
 
     //Service内容拼接
-    private void packageService(Interface service, String name){
+    private void packageService(Interface service, String name) {
         //添加list方法
         Method list = new Method("list");
         list.setVisibility(JavaVisibility.PUBLIC);
-        list.setReturnType( new FullyQualifiedJavaType("List<" + name + "VO>"));
+        list.setReturnType(new FullyQualifiedJavaType("List<" + name + "VO>"));
         list.addParameter(new Parameter(new FullyQualifiedJavaType(name + "QueryDTO"), "query"));
         list.setAbstract(true);
         list.addJavaDocLine("");
@@ -258,7 +269,7 @@ public class MyPluginAdapter extends PluginAdapter {
         //添加info方法
         Method info = new Method("info");
         info.setVisibility(JavaVisibility.PUBLIC);
-        info.setReturnType( new FullyQualifiedJavaType(name + "VO"));
+        info.setReturnType(new FullyQualifiedJavaType(name + "VO"));
         info.addParameter(new Parameter(new FullyQualifiedJavaType("Integer"), "id"));
         info.setAbstract(true);
         info.addJavaDocLine("/**");
@@ -277,17 +288,60 @@ public class MyPluginAdapter extends PluginAdapter {
         service.addMethod(delete);
     }
 
+
+    /**
+     * 生成ServiceImpl层
+     *
+     * @return
+     */
+    public List<GeneratedJavaFile> generateServiceImpl(List<GeneratedJavaFile> list, String name) {
+        TopLevelClass topLevelClass = new TopLevelClass(serviceImplPackage + name + "ServiceImpl");
+        topLevelClass.setVisibility(JavaVisibility.PUBLIC);
+        FullyQualifiedJavaType daoSuperType = new FullyQualifiedJavaType(name + "Service");
+        topLevelClass.addSuperInterface(daoSuperType);
+        topLevelClass.setSuperClass(new FullyQualifiedJavaType("AbstractService"));
+        topLevelClass.addAnnotation("@Service");
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("java.util.List"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.BeanUtils"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("java.util.stream.Collectors;"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.stereotype.Service"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.factory.annotation.Autowired"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(servicePackage+ name + "Service"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage  + name + "QueryDTO"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(voPackage + name + "VO"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(entityPackage + name));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(mapperPackage + name + "Mapper"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage + name + "ModifyDTO"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(abstractService));
+        packageServiceImpl(topLevelClass, name);
+        GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, javaPath, context.getJavaFormatter());
+        list.add(mapper);
+        return list;
+    }
+
+
     //ServiceImpl内容拼接
-    private void packageServiceImpl(TopLevelClass topLevelClass, String name, String lower){
+    private void packageServiceImpl(TopLevelClass topLevelClass, String name) {
+        //属性定义
+        String lower = lowerFirst(name);
+        String mapperName = lowerFirst(name) + "Mapper";
+        String mapperType = name + "Mapper";
+
+        //属性注入
+        Field field = new Field(mapperName, new FullyQualifiedJavaType(mapperType));
+        field.addJavaDocLine("");
+        field.addAnnotation("@Autowired");
+        topLevelClass.addField(field);
+
         //添加list方法
         Method list = new Method("list");
         list.setVisibility(JavaVisibility.PUBLIC);
-        list.setReturnType( new FullyQualifiedJavaType("List<" + name + "VO>"));
+        list.setReturnType(new FullyQualifiedJavaType("List<" + name + "VO>"));
         list.addParameter(new Parameter(new FullyQualifiedJavaType(name + "QueryDTO"), "query"));
         list.addAnnotation("@Override");
         list.addBodyLine(name + " target = new " + name + "();");
         list.addBodyLine("BeanUtils.copyProperties(query, target);");
-        list.addBodyLine("List<" + name + "> list = " +lower+ "Mapper.select(target);");
+        list.addBodyLine("List<" + name + "> list = " + mapperName + ".select(target);");
         list.addBodyLine("List<" + name + "VO> collect = list.stream().map(x -> dto2vo(x)).collect(Collectors.toList());");
         list.addBodyLine("return collect;");
         topLevelClass.addMethod(list);
@@ -299,7 +353,7 @@ public class MyPluginAdapter extends PluginAdapter {
         insert.addAnnotation("@Override");
         insert.addBodyLine(name + " target = new " + name + "();");
         insert.addBodyLine("BeanUtils.copyProperties(save, target);");
-        insert.addBodyLine(lower+ "Mapper.insert(target);");
+        insert.addBodyLine(mapperName + ".insert(target);");
         topLevelClass.addMethod(insert);
 
         //添加update方法
@@ -309,16 +363,16 @@ public class MyPluginAdapter extends PluginAdapter {
         update.addAnnotation("@Override");
         update.addBodyLine(name + " target = new " + name + "();");
         update.addBodyLine("BeanUtils.copyProperties(update, target);");
-        update.addBodyLine(lower+ "Mapper.updateByPrimaryKeySelective(target);");
+        update.addBodyLine(mapperName + ".updateByPrimaryKeySelective(target);");
         topLevelClass.addMethod(update);
 
         //添加info方法
         Method info = new Method("info");
         info.setVisibility(JavaVisibility.PUBLIC);
-        info.setReturnType( new FullyQualifiedJavaType(name + "VO"));
+        info.setReturnType(new FullyQualifiedJavaType(name + "VO"));
         info.addParameter(new Parameter(new FullyQualifiedJavaType("Integer"), "id"));
         info.addAnnotation("@Override");
-        info.addBodyLine(name + " " + lower + " = " + lower+ "Mapper.selectByPrimaryKey(id);");
+        info.addBodyLine(name + " " + lower + " = " + mapperName + ".selectByPrimaryKey(id);");
         info.addBodyLine(name + "VO " + lower + "VO = dto2vo(" + lower + ");");
         info.addBodyLine("return " + lower + "VO;");
         topLevelClass.addMethod(info);
@@ -329,7 +383,7 @@ public class MyPluginAdapter extends PluginAdapter {
         delete.addParameter(new Parameter(new FullyQualifiedJavaType("List<Integer>"), "delete"));
         delete.addAnnotation("@Override");
         delete.addBodyLine("for(Integer id : delete){");
-        delete.addBodyLine(lower+ "Mapper.deleteByPrimaryKey(id);");
+        delete.addBodyLine(mapperName + ".deleteByPrimaryKey(id);");
         delete.addBodyLine("}");
         topLevelClass.addMethod(delete);
 
@@ -345,42 +399,6 @@ public class MyPluginAdapter extends PluginAdapter {
         topLevelClass.addMethod(dto2vo);
     }
 
-    /**
-     * 生成ServiceImpl层
-     *
-     * @return
-     */
-    public List<GeneratedJavaFile> generateServiceImpl(List<GeneratedJavaFile> list, String name) {
-        String lower = name.substring(0, 1).toLowerCase() + name.substring(1);
-        TopLevelClass topLevelClass = new TopLevelClass(serviceImplPackage + "." + name + "ServiceImpl");
-        topLevelClass.setVisibility(JavaVisibility.PUBLIC);
-        FullyQualifiedJavaType daoSuperType = new FullyQualifiedJavaType(name + "Service");
-        topLevelClass.addSuperInterface(daoSuperType);
-        topLevelClass.setSuperClass(new FullyQualifiedJavaType("AbstractService"));
-        topLevelClass.addAnnotation("@Service");
-        topLevelClass.addImportedType(new FullyQualifiedJavaType(servicePackage + "." + name + "Service"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.BeanUtils"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("java.util.stream.Collectors;"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.stereotype.Service"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.beiming.modules.base.service.AbstractService"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.beiming.modules.sys.dict.mapper.SysDictMapper"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.factory.annotation.Autowired"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage + "." + name + "QueryDTO"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType(voPackage + "." + name + "VO"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType(entityPackage + "." + name));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage + "." + name + "ModifyDTO"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType("java.util.List"));
-        Field field = new Field(lower + "Mapper", new FullyQualifiedJavaType(name + "Mapper"));
-        field.addJavaDocLine("");
-        field.addAnnotation("@Autowired");
-        topLevelClass.addField(field);
-        packageServiceImpl(topLevelClass, name ,lower);
-        GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, javaPath, context.getJavaFormatter());
-        list.add(mapper);
-        return list;
-    }
-
-
 
     /**
      * 生成Mapper层
@@ -389,13 +407,13 @@ public class MyPluginAdapter extends PluginAdapter {
      */
     public List<GeneratedJavaFile> generateMapper(List<GeneratedJavaFile> list, String name) {
         String target = baseMapper + "<" + name + ">";
-        Interface mapperInterface = new Interface(mapperPackage + "." + name + "Mapper");
+        Interface mapperInterface = new Interface(mapperPackage + name + "Mapper");
         mapperInterface.setVisibility(JavaVisibility.PUBLIC);
         FullyQualifiedJavaType daoSuperType = new FullyQualifiedJavaType(target);
         mapperInterface.addSuperInterface(daoSuperType);
         GeneratedJavaFile mapper = new GeneratedJavaFile(mapperInterface, javaPath, context.getJavaFormatter());
         mapperInterface.addImportedType(new FullyQualifiedJavaType("org.apache.ibatis.annotations.Mapper"));
-        mapperInterface.addImportedType(new FullyQualifiedJavaType(entityPackage + "." + name));
+        mapperInterface.addImportedType(new FullyQualifiedJavaType(entityPackage + name));
         mapperInterface.addImportedType(new FullyQualifiedJavaType(baseMapper));
         mapperInterface.addAnnotation("@Mapper");
         list.add(mapper);
@@ -406,10 +424,10 @@ public class MyPluginAdapter extends PluginAdapter {
      * 生成Entity
      */
     public List<GeneratedJavaFile> generateEntity(List<GeneratedJavaFile> list, TableConfiguration config, IntrospectedTable table) {
-        TopLevelClass topLevelClass = new TopLevelClass(entityPackage + "." + config.getDomainObjectName());
+        TopLevelClass topLevelClass = new TopLevelClass(entityPackage + config.getDomainObjectName());
         topLevelClass.addField(packageFieldKeyModel(table.getPrimaryKeyColumns().get(0)));
-        for(IntrospectedColumn column : table.getBaseColumns()){
-            topLevelClass.addField(packageFieldModel(column,0));
+        for (IntrospectedColumn column : table.getBaseColumns()) {
+            topLevelClass.addField(packageFieldModel(column, 2));
         }
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         topLevelClass.addAnnotation("@Builder");
@@ -423,8 +441,9 @@ public class MyPluginAdapter extends PluginAdapter {
         topLevelClass.addImportedType("javax.persistence.Id"); //引入@Id
         topLevelClass.addImportedType("javax.persistence.GeneratedValue"); //引入@GeneratedValue
         topLevelClass.addImportedType("javax.persistence.GenerationType"); //引入@GenerationType
+        topLevelClass.addImportedType("javax.persistence.*"); //
         topLevelClass.addImportedType("lombok.Builder"); //引入@Builder
-        topLevelClass.addImportedType("java.util.Date"); //引入@Builder
+        topLevelClass.addImportedType("java.util.Date"); //引入@Date
         topLevelClass.addImportedType("lombok.NoArgsConstructor"); //引入@NoArgsConstructor
         topLevelClass.addImportedType("lombok.AllArgsConstructor"); //引入@AllArgsConstructor
         GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, javaPath, context.getJavaFormatter());
@@ -436,10 +455,10 @@ public class MyPluginAdapter extends PluginAdapter {
      * 生成DTO
      */
     public List<GeneratedJavaFile> generateDTO(List<GeneratedJavaFile> list, TableConfiguration config, IntrospectedTable table) {
-        TopLevelClass topLevelClass = new TopLevelClass(dtoPackage + "." + config.getDomainObjectName()+ "ModifyDTO");
+        TopLevelClass topLevelClass = new TopLevelClass(dtoPackage + config.getDomainObjectName() + "ModifyDTO");
         topLevelClass.addField(packageFieldModel(table.getPrimaryKeyColumns().get(0), 0));
-        for(IntrospectedColumn column : table.getBaseColumns()){
-            if(DTOIgnore.contains(column.getActualColumnName())){
+        for (IntrospectedColumn column : table.getBaseColumns()) {
+            if (DTOIgnore.contains(column.getActualColumnName())) {
                 break;
             }
             topLevelClass.addField(packageFieldModel(column, 1));
@@ -461,10 +480,10 @@ public class MyPluginAdapter extends PluginAdapter {
      * 生成VO
      */
     public List<GeneratedJavaFile> generateVO(List<GeneratedJavaFile> list, TableConfiguration config, IntrospectedTable table) {
-        TopLevelClass topLevelClass = new TopLevelClass(voPackage + "." + config.getDomainObjectName()+ "VO");
+        TopLevelClass topLevelClass = new TopLevelClass(voPackage + config.getDomainObjectName() + "VO");
         topLevelClass.addField(packageFieldModel(table.getPrimaryKeyColumns().get(0), 0));
-        for(IntrospectedColumn column : table.getBaseColumns()){
-            if(VOIgnore.contains(column.getActualColumnName())){
+        for (IntrospectedColumn column : table.getBaseColumns()) {
+            if (VOIgnore.contains(column.getActualColumnName())) {
                 break;
             }
             topLevelClass.addField(packageFieldModel(column, 0));
@@ -485,10 +504,10 @@ public class MyPluginAdapter extends PluginAdapter {
      * 生成QueryDTO
      */
     public List<GeneratedJavaFile> generateQueryDTO(List<GeneratedJavaFile> list, TableConfiguration config, IntrospectedTable table) {
-        TopLevelClass topLevelClass = new TopLevelClass(dtoPackage + "." + config.getDomainObjectName()+ "QueryDTO");
+        TopLevelClass topLevelClass = new TopLevelClass(dtoPackage + config.getDomainObjectName() + "QueryDTO");
         topLevelClass.addField(packageFieldModel(table.getPrimaryKeyColumns().get(0), 0));
-        for(IntrospectedColumn column : table.getBaseColumns()){
-            if(VOIgnore.contains(column.getActualColumnName())){
+        for (IntrospectedColumn column : table.getBaseColumns()) {
+            if (VOIgnore.contains(column.getActualColumnName())) {
                 break;
             }
             topLevelClass.addField(packageFieldModel(column, 0));
@@ -499,30 +518,34 @@ public class MyPluginAdapter extends PluginAdapter {
         topLevelClass.addImportedType("io.swagger.annotations.ApiModel;"); //引入@ApiModel
         topLevelClass.addImportedType("io.swagger.annotations.ApiModelProperty"); //引入@ApiModelProperty
         topLevelClass.addImportedType("lombok.Data"); //引入@Data
-        topLevelClass.addImportedType("java.util.Date"); //引入@Builder
         GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, javaPath, context.getJavaFormatter());
         list.add(mapper);
         return list;
     }
 
     //包装实体类非主键属性
-    private Field packageFieldModel(IntrospectedColumn column, Integer type){
+    private Field packageFieldModel(IntrospectedColumn column, Integer type) {
         Field field = new Field(column.getJavaProperty(), column.getFullyQualifiedJavaType());
         field.setVisibility(JavaVisibility.PUBLIC);
         field.addAnnotation("@ApiModelProperty(value = \"" + column.getRemarks() + "\")");
-        if(1 == type){
-            field.addAnnotation("@Max(value = " +column.getLength()+ " ,message = \"" +column.getActualColumnName()+ "最大长度为"+ column.getLength() +"\")");
-            if(!column.isNullable() && column.getFullyQualifiedJavaType().getFullyQualifiedName().equals("java.lang.String")){
+        if (1 == type) {
+            field.addAnnotation("@Max(value = " + column.getLength() + " ,message = \"" + column.getActualColumnName() + "最大长度为" + column.getLength() + "\")");
+            if (!column.isNullable() && column.getFullyQualifiedJavaType().getFullyQualifiedName().equals("java.lang.String")) {
                 field.addAnnotation("@NotBlank(message = \"" + column.getRemarks() + "不能为空\")");
-            }else if(!column.isNullable() && column.getFullyQualifiedJavaType().getFullyQualifiedName().equals("java.lang.Integer")){
+            } else if (!column.isNullable() && column.getFullyQualifiedJavaType().getFullyQualifiedName().equals("java.lang.Integer")) {
                 field.addAnnotation("@NotNull(message = \"" + column.getRemarks() + "不能为空\")");
+            }
+        }
+        if (2 == type) {
+            if(sqlKeyWord.contains(field.getName())){
+                field.addAnnotation("@Column(name = \"`" + field.getName() + "`\")");
             }
         }
         return field;
     }
 
     //包装实体类主键属性,当type=1时表示生成DTO
-    private Field packageFieldKeyModel(IntrospectedColumn column){
+    private Field packageFieldKeyModel(IntrospectedColumn column) {
         Field field = new Field(column.getJavaProperty(), column.getFullyQualifiedJavaType());
         field.setVisibility(JavaVisibility.PUBLIC);
         field.addJavaDocLine("");
@@ -530,6 +553,12 @@ public class MyPluginAdapter extends PluginAdapter {
         field.addAnnotation("@GeneratedValue(strategy= GenerationType.IDENTITY)");
         field.addAnnotation("@ApiModelProperty(value = \"" + column.getRemarks() + "\")");
         return field;
+    }
+
+    //将字符串的首字母小写并返回新的字符串
+    private String lowerFirst(String name){
+        String lower = name.substring(0, 1).toLowerCase() + name.substring(1);
+        return lower;
     }
 
     /**
@@ -650,5 +679,8 @@ public class MyPluginAdapter extends PluginAdapter {
         return false;
     }
 
-
+    @Override
+    public boolean sqlMapResultMapWithoutBLOBsElementGenerated(XmlElement element, IntrospectedTable introspectedTable) {
+        return super.sqlMapResultMapWithoutBLOBsElementGenerated(element, introspectedTable);
+    }
 }

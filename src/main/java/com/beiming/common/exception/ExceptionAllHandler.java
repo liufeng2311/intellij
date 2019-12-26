@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.beiming.common.enums.ResultCodeEnums;
 import com.beiming.common.utils.ResultModel;
+import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -67,5 +68,12 @@ public class ExceptionAllHandler {
 		log.error(" error {}", ex);
 		return ResultModel.fail(ResultCodeEnums.BAD_SQL_CHECK,
 				ex.getMessage());
+	}
+	//权限
+	@ExceptionHandler(UnauthorizedException.class)
+	public ResultModel processUnauthorizedException(UnauthorizedException ex) {
+		log.error(" error {}", ex);
+		return ResultModel.fail(ResultCodeEnums.SHIRO_MENU,
+				ResultCodeEnums.SHIRO_MENU.getMessage());
 	}
 }

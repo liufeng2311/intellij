@@ -1,5 +1,6 @@
 package com.beiming.common.generator;
 
+import com.github.pagehelper.PageInfo;
 import org.mybatis.generator.api.GeneratedJavaFile;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -53,6 +54,8 @@ public class MyPluginAdapter extends PluginAdapter {
 
     private String abstractService; //serviceImpl包路径
 
+    private String pageDomain; //serviceImpl包路径
+
 
 
     private String javaPath = "src/main/java";
@@ -61,6 +64,7 @@ public class MyPluginAdapter extends PluginAdapter {
     public boolean validate(List<String> list) {
         baseMapper = properties.getProperty("baseMapper");
         abstractService = properties.getProperty("abstractService");
+        pageDomain = properties.getProperty("pageDomain");
         modulePath = properties.getProperty("modulePath");
         controllerPackage = modulePath + ".controller.";
         servicePackage = modulePath + ".service.";
@@ -110,6 +114,7 @@ public class MyPluginAdapter extends PluginAdapter {
         topLevelClass.addAnnotation("@RequestMapping(\"" + config.getTableName().replace("_", "-") + "\")");
         topLevelClass.addAnnotation("//@RequiresRoles({\"" + prefix + config.getTableName().replace("_", "-") + "\"})");
         topLevelClass.addImportedType(new FullyQualifiedJavaType("java.util.List"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.github.pagehelper.PageInfo"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("org.apache.shiro.authz.annotation.RequiresRoles"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("io.swagger.annotations.Api"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("io.swagger.annotations.ApiImplicitParam"));
@@ -152,7 +157,7 @@ public class MyPluginAdapter extends PluginAdapter {
         param1.getAnnotations().add("@Valid");
         param1.getAnnotations().add("@RequestBody");
         list.addParameter(param1);
-        list.addBodyLine("List<" + name + "VO> list = " + serviceName + ".list(query);");
+        list.addBodyLine("PageInfo<" + name + "VO> list = " + serviceName + ".list(query);");
         list.addBodyLine("return ResultModel.success(list);");
         list.addAnnotation("@PostMapping(\"list\")");
         list.addAnnotation("@ApiOperation(value = \"" + tableName + "列表\")");
@@ -223,6 +228,7 @@ public class MyPluginAdapter extends PluginAdapter {
         Interface service = new Interface(servicePackage + name + "Service");
         service.setVisibility(JavaVisibility.PUBLIC);
         service.addImportedType(new FullyQualifiedJavaType("java.util.List"));
+        service.addImportedType(new FullyQualifiedJavaType("com.github.pagehelper.PageInfo"));
         service.addImportedType(new FullyQualifiedJavaType(dtoPackage + name + "QueryDTO"));
         service.addImportedType(new FullyQualifiedJavaType(voPackage + name + "VO"));
         service.addImportedType(new FullyQualifiedJavaType(dtoPackage + name + "ModifyDTO"));
@@ -237,7 +243,7 @@ public class MyPluginAdapter extends PluginAdapter {
         //添加list方法
         Method list = new Method("list");
         list.setVisibility(JavaVisibility.PUBLIC);
-        list.setReturnType(new FullyQualifiedJavaType("List<" + name + "VO>"));
+        list.setReturnType(new FullyQualifiedJavaType("PageInfo<" + name + "VO>"));
         list.addParameter(new Parameter(new FullyQualifiedJavaType(name + "QueryDTO"), "query"));
         list.setAbstract(true);
         list.addJavaDocLine("");
@@ -302,6 +308,9 @@ public class MyPluginAdapter extends PluginAdapter {
         topLevelClass.setSuperClass(new FullyQualifiedJavaType("AbstractService"));
         topLevelClass.addAnnotation("@Service");
         topLevelClass.addImportedType(new FullyQualifiedJavaType("java.util.List"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.github.pagehelper.Page"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.github.pagehelper.PageInfo"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType("com.github.pagehelper.PageHelper"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.BeanUtils"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("java.util.stream.Collectors;"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.stereotype.Service"));
@@ -336,14 +345,16 @@ public class MyPluginAdapter extends PluginAdapter {
         //添加list方法
         Method list = new Method("list");
         list.setVisibility(JavaVisibility.PUBLIC);
-        list.setReturnType(new FullyQualifiedJavaType("List<" + name + "VO>"));
+        list.setReturnType(new FullyQualifiedJavaType("PageInfo<" + name + "VO>"));
         list.addParameter(new Parameter(new FullyQualifiedJavaType(name + "QueryDTO"), "query"));
         list.addAnnotation("@Override");
         list.addBodyLine(name + " target = new " + name + "();");
         list.addBodyLine("BeanUtils.copyProperties(query, target);");
+        list.addBodyLine("Page<" + name + "VO> page = PageHelper.startPage(query.getPageNum(), query.getPageSize());");
         list.addBodyLine("List<" + name + "> list = " + mapperName + ".select(target);");
-        list.addBodyLine("List<" + name + "VO> collect = list.stream().map(x -> dto2vo(x)).collect(Collectors.toList());");
-        list.addBodyLine("return collect;");
+        list.addBodyLine("PageInfo<" + name + "VO> pageInfo = new PageInfo<>(page);");
+        list.addBodyLine("pageInfo.setList(list.stream().map(x -> dto2vo(x)).collect(Collectors.toList()));");
+        list.addBodyLine("return pageInfo;");
         topLevelClass.addMethod(list);
 
         //添加insert方法
@@ -506,6 +517,7 @@ public class MyPluginAdapter extends PluginAdapter {
     public List<GeneratedJavaFile> generateQueryDTO(List<GeneratedJavaFile> list, TableConfiguration config, IntrospectedTable table) {
         TopLevelClass topLevelClass = new TopLevelClass(dtoPackage + config.getDomainObjectName() + "QueryDTO");
         topLevelClass.addField(packageFieldModel(table.getPrimaryKeyColumns().get(0), 0));
+        topLevelClass.setSuperClass(pageDomain.split("\\.")[pageDomain.split("\\.").length -1]);
         for (IntrospectedColumn column : table.getBaseColumns()) {
             if (VOIgnore.contains(column.getActualColumnName())) {
                 break;
@@ -515,7 +527,8 @@ public class MyPluginAdapter extends PluginAdapter {
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         topLevelClass.addAnnotation("@ApiModel(description = \"" + table.getRemarks() + "QueryDTO\")");
         topLevelClass.addAnnotation("@Data");
-        topLevelClass.addImportedType("io.swagger.annotations.ApiModel;"); //引入@ApiModel
+        topLevelClass.addImportedType("io.swagger.annotations.ApiModel"); //引入@ApiModel
+        topLevelClass.addImportedType(pageDomain);
         topLevelClass.addImportedType("io.swagger.annotations.ApiModelProperty"); //引入@ApiModelProperty
         topLevelClass.addImportedType("lombok.Data"); //引入@Data
         GeneratedJavaFile mapper = new GeneratedJavaFile(topLevelClass, javaPath, context.getJavaFormatter());
@@ -529,7 +542,7 @@ public class MyPluginAdapter extends PluginAdapter {
         field.setVisibility(JavaVisibility.PUBLIC);
         field.addAnnotation("@ApiModelProperty(value = \"" + column.getRemarks() + "\")");
         if (1 == type) {
-            field.addAnnotation("@Max(value = " + column.getLength() + " ,message = \"" + column.getActualColumnName() + "最大长度为" + column.getLength() + "\")");
+            field.addAnnotation("@Max(value = " + column.getLength() + " ,message = \"" + column.getRemarks() + "最大长度为" + column.getLength() + "\")");
             if (!column.isNullable() && column.getFullyQualifiedJavaType().getFullyQualifiedName().equals("java.lang.String")) {
                 field.addAnnotation("@NotBlank(message = \"" + column.getRemarks() + "不能为空\")");
             } else if (!column.isNullable() && column.getFullyQualifiedJavaType().getFullyQualifiedName().equals("java.lang.Integer")) {

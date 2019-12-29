@@ -1,6 +1,5 @@
 package com.beiming.common.generator;
 
-import com.github.pagehelper.PageInfo;
 import org.mybatis.generator.api.GeneratedJavaFile;
 import org.mybatis.generator.api.IntrospectedColumn;
 import org.mybatis.generator.api.IntrospectedTable;
@@ -21,7 +20,7 @@ public class MyPluginAdapter extends PluginAdapter {
 
     private List<String> VOIgnore = new ArrayList<>(); //指定VO生成时忽略哪些字段
 
-    private List<String> sqlKeyWord = new ArrayList<>(); //指定VO生成时忽略哪些字段
+    private List<String> sqlKeyWord = new ArrayList<>(); //指定sql关键字,如果是关键字,通过@Column注解添加别名
 
     {
         DTOIgnore.add("create_time");

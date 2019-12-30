@@ -5,7 +5,7 @@ server:
 spring:
     datasource:
         driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://192.168.64.128:3306/intellij?useUnicode=true&characterEncoding=UTF8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+        url: jdbc:mysql://192.168.64.129:3306/intellij?useUnicode=true&characterEncoding=UTF8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
         username: root
         password: mysql8_root
         hikari:

@@ -27,6 +27,7 @@ public class MyPluginAdapter extends PluginAdapter {
         DTOIgnore.add("create_user");
         DTOIgnore.add("update_time");
         DTOIgnore.add("update_user");
+        //DTOIgnore.add("user_id");
         VOIgnore.add("update_time");
         VOIgnore.add("update_user");
         sqlKeyWord.add("order");
@@ -538,7 +539,7 @@ public class MyPluginAdapter extends PluginAdapter {
     //包装实体类非主键属性
     private Field packageFieldModel(IntrospectedColumn column, Integer type) {
         Field field = new Field(column.getJavaProperty(), column.getFullyQualifiedJavaType());
-        field.setVisibility(JavaVisibility.PUBLIC);
+        field.setVisibility(JavaVisibility.PRIVATE);
         field.addAnnotation("@ApiModelProperty(value = \"" + column.getRemarks() + "\")");
         if (1 == type) {
             field.addAnnotation("@Max(value = " + column.getLength() + " ,message = \"" + column.getRemarks() + "最大长度为" + column.getLength() + "\")");
@@ -559,7 +560,7 @@ public class MyPluginAdapter extends PluginAdapter {
     //包装实体类主键属性,当type=1时表示生成DTO
     private Field packageFieldKeyModel(IntrospectedColumn column) {
         Field field = new Field(column.getJavaProperty(), column.getFullyQualifiedJavaType());
-        field.setVisibility(JavaVisibility.PUBLIC);
+        field.setVisibility(JavaVisibility.PRIVATE);
         field.addJavaDocLine("");
         field.addAnnotation("@Id");
         field.addAnnotation("@GeneratedValue(strategy= GenerationType.IDENTITY)");

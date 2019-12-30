@@ -1,6 +1,7 @@
 package com.beiming.common.exception;
 
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.util.stream.Collectors;
 
 import com.beiming.common.enums.ResultCodeEnums;
@@ -8,6 +9,7 @@ import com.beiming.common.utils.ResultModel;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -75,5 +77,12 @@ public class ExceptionAllHandler {
 		log.error(" error {}", ex);
 		return ResultModel.fail(ResultCodeEnums.SHIRO_MENU,
 				ResultCodeEnums.SHIRO_MENU.getMessage());
+
+	}	//权限
+	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
+	public ResultModel processHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
+		log.error(" error {}", ex);
+		return ResultModel.fail(ResultCodeEnums.REQUEST_METHOD,
+				ResultCodeEnums.REQUEST_METHOD.getMessage());
 	}
 }

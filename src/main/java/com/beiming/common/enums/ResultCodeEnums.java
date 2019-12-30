@@ -36,7 +36,10 @@ public enum ResultCodeEnums {
 	VAILD_MENU("60001", "Authorization认证失败"),
 
 	//权限异常
-	SHIRO_MENU("70001", "权限不足,非法访问");
+	SHIRO_MENU("70001", "权限不足,非法访问"),
+
+	//请求方式异常
+	REQUEST_METHOD("80001", "错误的请求方式");
 
     private String code;
 	

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 import com.beiming.common.enums.ResultCodeEnums;
 import com.beiming.common.utils.ResultModel;
 import org.apache.shiro.authz.UnauthorizedException;
+import org.springframework.http.converter.HttpMessageConverter;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
@@ -19,14 +20,14 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * 	统一异常捕获类
+ * 	统一异常捕获类 HttpMessageConverter
  *
  */
 @ControllerAdvice
 @ResponseBody
 @Slf4j
 public class ExceptionAllHandler {
-	
+
 	//其他异常
 	@ExceptionHandler(Exception.class)
 	public ResultModel processException(Exception e) {
@@ -78,7 +79,9 @@ public class ExceptionAllHandler {
 		return ResultModel.fail(ResultCodeEnums.SHIRO_MENU,
 				ResultCodeEnums.SHIRO_MENU.getMessage());
 
-	}	//权限
+	}
+
+	//权限
 	@ExceptionHandler(HttpRequestMethodNotSupportedException.class)
 	public ResultModel processHttpRequestMethodNotSupportedException(HttpRequestMethodNotSupportedException ex) {
 		log.error(" error {}", ex);

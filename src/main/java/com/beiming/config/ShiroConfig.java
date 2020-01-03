@@ -41,6 +41,7 @@ public class ShiroConfig {
      */
     private void anons() {
         map.put("/*/anon/**", "anon"); //该过滤器表示放行,anon == AnonymousFilter
+        map.put("/actuator/**", "anon");
     }
 
     /**

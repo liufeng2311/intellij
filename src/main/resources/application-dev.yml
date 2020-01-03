@@ -19,7 +19,7 @@ spring:
       date-format: yyyy-MM-dd HH:mm:ss
       time-zone: GMT+8
     redis:
-      host: 127.0.0.1
+      host: 192.168.64.129
       port: 6379
       password:
 
@@ -29,3 +29,9 @@ mybatis:
 #设置Swagger文档是否可被查看
 swagger:
   enable: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info,health,beans,mappings  #默认开启info, health,此处我们开启beans,mappings端点

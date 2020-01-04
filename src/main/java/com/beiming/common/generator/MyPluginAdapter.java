@@ -7,6 +7,7 @@ import org.mybatis.generator.api.PluginAdapter;
 import org.mybatis.generator.api.dom.java.*;
 import org.mybatis.generator.api.dom.xml.XmlElement;
 import org.mybatis.generator.config.TableConfiguration;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,7 +58,6 @@ public class MyPluginAdapter extends PluginAdapter {
     private String pageDomain; //serviceImpl包路径
 
 
-
     private String javaPath = "src/main/java";
 
     @Override
@@ -106,7 +106,7 @@ public class MyPluginAdapter extends PluginAdapter {
      */
     public List<GeneratedJavaFile> generateController(List<GeneratedJavaFile> list, TableConfiguration config, String name, IntrospectedTable table) {
         String[] split = modulePath.split("\\.");
-        String prefix = split[split.length - 1] +":";
+        String prefix = split[split.length - 1] + ":";
         TopLevelClass topLevelClass = new TopLevelClass(controllerPackage + name + "Controller");
         topLevelClass.setVisibility(JavaVisibility.PUBLIC);
         topLevelClass.addAnnotation("@Api(tags = \"" + table.getRemarks() + "\")");
@@ -315,8 +315,8 @@ public class MyPluginAdapter extends PluginAdapter {
         topLevelClass.addImportedType(new FullyQualifiedJavaType("java.util.stream.Collectors;"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.stereotype.Service"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType("org.springframework.beans.factory.annotation.Autowired"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType(servicePackage+ name + "Service"));
-        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage  + name + "QueryDTO"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(servicePackage + name + "Service"));
+        topLevelClass.addImportedType(new FullyQualifiedJavaType(dtoPackage + name + "QueryDTO"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType(voPackage + name + "VO"));
         topLevelClass.addImportedType(new FullyQualifiedJavaType(entityPackage + name));
         topLevelClass.addImportedType(new FullyQualifiedJavaType(mapperPackage + name + "Mapper"));
@@ -517,7 +517,7 @@ public class MyPluginAdapter extends PluginAdapter {
     public List<GeneratedJavaFile> generateQueryDTO(List<GeneratedJavaFile> list, TableConfiguration config, IntrospectedTable table) {
         TopLevelClass topLevelClass = new TopLevelClass(dtoPackage + config.getDomainObjectName() + "QueryDTO");
         topLevelClass.addField(packageFieldModel(table.getPrimaryKeyColumns().get(0), 0));
-        topLevelClass.setSuperClass(pageDomain.split("\\.")[pageDomain.split("\\.").length -1]);
+        topLevelClass.setSuperClass(pageDomain.split("\\.")[pageDomain.split("\\.").length - 1]);
         for (IntrospectedColumn column : table.getBaseColumns()) {
             if (VOIgnore.contains(column.getActualColumnName())) {
                 break;
@@ -550,7 +550,7 @@ public class MyPluginAdapter extends PluginAdapter {
             }
         }
         if (2 == type) {
-            if(sqlKeyWord.contains(field.getName())){
+            if (sqlKeyWord.contains(field.getName())) {
                 field.addAnnotation("@Column(name = \"`" + field.getName() + "`\")");
             }
         }
@@ -569,7 +569,7 @@ public class MyPluginAdapter extends PluginAdapter {
     }
 
     //将字符串的首字母小写并返回新的字符串
-    private String lowerFirst(String name){
+    private String lowerFirst(String name) {
         String lower = name.substring(0, 1).toLowerCase() + name.substring(1);
         return lower;
     }

@@ -12,12 +12,12 @@ import javax.servlet.http.HttpServletResponse;
  * Service层公共父类
  * 定义service中的用法用法
  */
-public abstract class AbstractService{
+public abstract class AbstractService {
 
     /**
      * 获取用户信息
      */
-    public SysUser getUser(){
+    public SysUser getUser() {
         return (SysUser) SecurityUtils.getSubject().getPrincipal();
     }
 
@@ -31,7 +31,7 @@ public abstract class AbstractService{
     /**
      * 获取HttpServletResponse
      */
-    public HttpServletResponse getResponse(){
+    public HttpServletResponse getResponse() {
         return ((ServletRequestAttributes) (RequestContextHolder.currentRequestAttributes())).getResponse();
     }
 }

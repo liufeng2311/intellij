@@ -16,11 +16,13 @@ import java.util.*;
  */
 public class MyCommentGenerator extends DefaultCommentGenerator {
 
-    private static final List<String > ids = new ArrayList<>(Arrays.asList("id", "ID", "Id")); //数据库中ID字段的定义
+    private static final List<String> ids = new ArrayList<>(Arrays.asList("id", "ID", "Id")); //数据库中ID字段的定义
 
     private Properties properties = new Properties();
+
     /**
      * 定义属性
+     *
      * @param properties 该参数为配置文件中commentGenerator元素定义的参数
      */
     @Override
@@ -31,7 +33,8 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
 
     /**
      * 生成实体类的相关配置
-     * @param topLevelClass 用于对生成的实体类操作
+     *
+     * @param topLevelClass     用于对生成的实体类操作
      * @param introspectedTable 数据库对应的表
      */
     @Override
@@ -66,20 +69,21 @@ public class MyCommentGenerator extends DefaultCommentGenerator {
 
     /**
      * 生成实体类中字段的相关配置
-     * @param field 用于对生成的实体类属性操作
-     * @param introspectedTable 数据库对应的表
+     *
+     * @param field              用于对生成的实体类属性操作
+     * @param introspectedTable  数据库对应的表
      * @param introspectedColumn 数据库对应的表字段
      */
     @Override
     public void addFieldComment(Field field, IntrospectedTable introspectedTable, IntrospectedColumn introspectedColumn) {
         String remarks = introspectedColumn.getRemarks();  // 获取列注释
         String columnName = introspectedColumn.getActualColumnName();
-        if(ids.contains(columnName)){  //如果字段为ID,添加空行,此处只是为了生成的实体类好看
+        if (ids.contains(columnName)) {  //如果字段为ID,添加空行,此处只是为了生成的实体类好看
             field.addJavaDocLine("");
             field.addAnnotation("@Id");
             field.addAnnotation("@GeneratedValue(strategy= GenerationType.IDENTITY)");
         }
-        if(StringUtils.isEmpty(remarks)){
+        if (StringUtils.isEmpty(remarks)) {
             remarks = "ID";
         }
         field.addAnnotation("@ApiModelProperty(value = \"" + remarks + "\")");

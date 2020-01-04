@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.beiming.modules.sys.user.mapper.SysUserMapper">
-  <resultMap id="BaseResultMap" type="com.beiming.modules.sys.user.domain.entity.SysUser">
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="username" jdbcType="VARCHAR" property="username" />
-    <result column="password" jdbcType="VARCHAR" property="password" />
-    <result column="lock_status" jdbcType="VARCHAR" property="lockStatus" />
-    <result column="token" jdbcType="VARCHAR" property="token" />
-    <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="create_user" jdbcType="INTEGER" property="createUser" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-    <result column="update_user" jdbcType="INTEGER" property="updateUser" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.beiming.modules.sys.user.domain.entity.SysUser">
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="username" jdbcType="VARCHAR" property="username"/>
+        <result column="password" jdbcType="VARCHAR" property="password"/>
+        <result column="lock_status" jdbcType="VARCHAR" property="lockStatus"/>
+        <result column="token" jdbcType="VARCHAR" property="token"/>
+        <result column="expire_time" jdbcType="TIMESTAMP" property="expireTime"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="INTEGER" property="createUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+        <result column="update_user" jdbcType="INTEGER" property="updateUser"/>
+    </resultMap>
 
-  <select id="getUserRoles" resultType="java.lang.String">
-    select r.permit
-    from sys_user_role ur
-    left join sys_role r on ur.role_id = r.id
-    where ur.user_id = #{id} and r.permit is not null;
-  </select>
+    <select id="getUserRoles" resultType="java.lang.String">
+        select r.permit
+        from sys_user_role ur
+        left join sys_role r on ur.role_id = r.id
+        where ur.user_id = #{id} and r.permit is not null;
+    </select>
 
-  <select id="getUserMenus" resultType="java.lang.String">
-    select m.permit
-    from sys_user_role ur
-    left join sys_role_menu rm on ur.role_id = rm.role_id
-    left join sys_menu m on rm.menu_id = m.id
-    where ur.user_id = #{id} and m.permit is not null;
-  </select>
+    <select id="getUserMenus" resultType="java.lang.String">
+        select m.permit
+        from sys_user_role ur
+        left join sys_role_menu rm on ur.role_id = rm.role_id
+        left join sys_menu m on rm.menu_id = m.id
+        where ur.user_id = #{id} and m.permit is not null;
+    </select>
 </mapper>

@@ -12,7 +12,7 @@ import java.util.Date;
  * {@link LocalTime} 表示与时区无关的时间
  * {@link ZonedDateTime} 表示特定时区的日期和时间
  * {@link ZoneId}和 {@link ZoneOffset}  表示时区
- *
+ * <p>
  * Java8提供的时间类型通过 {@link Instant}与 {@link Date}进行转换
  * java8时间和 {@link Instant}转换时必须添加时区
  */
@@ -34,15 +34,15 @@ public class DateUtils {
     /**
      * LocalDateTime字符串转Date
      */
-    public static Date localDateTimeString2Date(String date, String formatter){
-        return localDateTime2Date(LocalDateTime.parse(date,DateTimeFormatter.ofPattern(formatter)));
+    public static Date localDateTimeString2Date(String date, String formatter) {
+        return localDateTime2Date(LocalDateTime.parse(date, DateTimeFormatter.ofPattern(formatter)));
     }
 
     /**
      * LocalDate字符串转Date
      */
-    public static Date localDateString2Date(String date, String formatter){
-        return localDate2Date(LocalDate.parse(date,DateTimeFormatter.ofPattern(formatter)));
+    public static Date localDateString2Date(String date, String formatter) {
+        return localDate2Date(LocalDate.parse(date, DateTimeFormatter.ofPattern(formatter)));
     }
 
     /**
@@ -102,7 +102,7 @@ public class DateUtils {
     /**
      * 计算时间间隔(单位为日以下)
      */
-    public static Duration durationTimeLocalDate(LocalDateTime start, LocalDateTime end){
+    public static Duration durationTimeLocalDate(LocalDateTime start, LocalDateTime end) {
         Duration between = Duration.between(start, end);
         return between;
     }
@@ -110,7 +110,7 @@ public class DateUtils {
     /**
      * 计算时间间隔(单位为日以下)
      */
-    public static Duration durationTimeInstant(Instant start, Instant end){
+    public static Duration durationTimeInstant(Instant start, Instant end) {
         Duration between = Duration.between(start, end);
         return between;
     }
@@ -118,7 +118,7 @@ public class DateUtils {
     /**
      * 计算时间间隔(单位日以上)
      */
-    public static Period periodTimeLag(LocalDate start, LocalDate end){
+    public static Period periodTimeLag(LocalDate start, LocalDate end) {
         Period between = Period.between(start, end);
         return between;
     }

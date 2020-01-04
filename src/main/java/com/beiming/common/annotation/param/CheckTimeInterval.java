@@ -4,6 +4,7 @@ import com.beiming.common.utils.DateUtils;
 import org.springframework.beans.BeanWrapper;
 import org.springframework.beans.BeanWrapperImpl;
 import org.springframework.util.StringUtils;
+
 import javax.validation.Constraint;
 import javax.validation.ConstraintValidator;
 import javax.validation.ConstraintValidatorContext;
@@ -48,13 +49,13 @@ public @interface CheckTimeInterval {
 //设置该注解为可重复注解
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
-    @interface CheckTimeIntervals{
-        CheckTimeInterval[] value();
-    }
+@interface CheckTimeIntervals {
+    CheckTimeInterval[] value();
+}
 
 
 //自定义注解验证逻辑
- class TimeIntervalValidator implements ConstraintValidator<CheckTimeInterval, Object> {
+class TimeIntervalValidator implements ConstraintValidator<CheckTimeInterval, Object> {
 
     private String start;
 
@@ -80,18 +81,18 @@ public @interface CheckTimeInterval {
     @Override
     public boolean isValid(Object value, ConstraintValidatorContext context) {
         context.disableDefaultConstraintViolation(); //禁用默认提示信息
-        if(value == null){
+        if (value == null) {
             return false;
         }
         BeanWrapper bean = new BeanWrapperImpl(value);
         String startTime = (String) bean.getPropertyValue(start);
         String endTime = (String) bean.getPropertyValue(end);
-        if(StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)){
+        if (StringUtils.isEmpty(startTime) || StringUtils.isEmpty(endTime)) {
             context.buildConstraintViolationWithTemplate(startName + "、" + endName + "不能为空")
                     .addConstraintViolation();
             return false;
         }
-        if(!DateUtils.localDateString2Date(startTime, format).before(DateUtils.localDateString2Date(endTime, format))){
+        if (!DateUtils.localDateString2Date(startTime, format).before(DateUtils.localDateString2Date(endTime, format))) {
             context.buildConstraintViolationWithTemplate(startName + "不能晚于" + endName)
                     .addConstraintViolation();
             return false;

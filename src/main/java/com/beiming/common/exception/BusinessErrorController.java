@@ -21,11 +21,11 @@ public class BusinessErrorController implements ErrorController {
     public static final String ERROR_PATH = "/error";
 
     @RequestMapping(ERROR_PATH)
-    public ResultModel filterError(HttpServletRequest request, HttpServletResponse response){
+    public ResultModel filterError(HttpServletRequest request, HttpServletResponse response) {
         Exception e = (Exception) request.getAttribute("javax.servlet.error.exception"); //获取Filter抛出的异常信息
-        if(e != null){
-            return ResultModel.fail(ResultCodeEnums.VAILD_TOKEN,e.getCause().getMessage());
-        }else {
+        if (e != null) {
+            return ResultModel.fail(ResultCodeEnums.VAILD_TOKEN, e.getCause().getMessage());
+        } else {
             return ResultModel.fail(ResultCodeEnums.UNKNOWN_EXCEPTION);
         }
     }

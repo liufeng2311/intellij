@@ -8,7 +8,9 @@
             <level>DEBUG</level> <!--输出该级别以上的日志,控制台定义为DEBUG,文件定义为INFO-->
         </filter>
         <encoder> <!--设置格式-->
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %yellow(%5p) %highlight(${PID:-}) %highlight([%15.15t]) %cyan(%-40.40logger{39}) : %m%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} %yellow(%5p) %highlight(${PID:-}) %highlight([%15.15t])
+                %cyan(%-40.40logger{39}) : %m%n
+            </pattern>
         </encoder>
     </appender>
 
@@ -18,7 +20,8 @@
         <!--定义日志滚动的策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--定义文件滚动时的文件名的格式-->
-            <fileNamePattern>/data/project/logs/log-%d{yyyy-MM-dd}.log</fileNamePattern>  <!--TimeBasedRollingPolicy中不能用%i-->
+            <fileNamePattern>/data/project/logs/log-%d{yyyy-MM-dd}.log
+            </fileNamePattern>  <!--TimeBasedRollingPolicy中不能用%i-->
             <!--保存60个文件，超过就删除旧的-->
             <maxHistory>60</maxHistory>
             <!-- 该属性在 1.1.6版本后 才开始支持-->
@@ -42,7 +45,8 @@
         <!--定义日志滚动的策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--定义文件滚动时的文件名的格式-->
-            <fileNamePattern>/data/project/logs/request/log-%d{yyyy-MM-dd}.log</fileNamePattern>  <!--TimeBasedRollingPolicy中不能用%i-->
+            <fileNamePattern>/data/project/logs/request/log-%d{yyyy-MM-dd}.log
+            </fileNamePattern>  <!--TimeBasedRollingPolicy中不能用%i-->
             <!--保存60个文件，超过就删除旧的-->
             <maxHistory>60</maxHistory>
             <!-- 日志最大值为20G,超出会删除原有的-->

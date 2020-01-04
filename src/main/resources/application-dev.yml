@@ -1,27 +1,27 @@
 server:
-    port: 9002
-    servlet:
-      context-path: /intellij
+  port: 9002
+  servlet:
+    context-path: /intellij
 spring:
-    datasource:
-        driver-class-name: com.mysql.cj.jdbc.Driver
-        url: jdbc:mysql://192.168.64.129:3306/intellij?useUnicode=true&characterEncoding=UTF8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
-        username: root
-        password: mysql8_root
-        hikari:
-          minimum-idle: 5
-          maximum-pool-size: 15
-          connection-test-query: SELECT 1
-          max-lifetime: 1800000
-          connection-timeout: 30000
-          pool-name: HikariCP
-    jackson:
-      date-format: yyyy-MM-dd HH:mm:ss
-      time-zone: GMT+8
-    redis:
-      host: 192.168.64.129
-      port: 6379
-      password:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://192.168.64.129:3306/intellij?useUnicode=true&characterEncoding=UTF8&zeroDateTimeBehavior=convertToNull&autoReconnect=true&useSSL=false
+    username: root
+    password: mysql8_root
+    hikari:
+      minimum-idle: 5
+      maximum-pool-size: 15
+      connection-test-query: SELECT 1
+      max-lifetime: 1800000
+      connection-timeout: 30000
+      pool-name: HikariCP
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+  redis:
+    host: 192.168.64.129
+    port: 6379
+    password:
 
 mybatis:
   mapperLocations: classpath*:mapper/**/*.xml

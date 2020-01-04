@@ -1,6 +1,7 @@
 package com.beiming.modules.sys.user.domain.entity;
 
 import io.swagger.annotations.ApiModelProperty;
+
 import java.util.Date;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -14,7 +15,7 @@ import lombok.NoArgsConstructor;
 
 /**
  * 部门权限表
- *
+ * <p>
  * Date 2019-12-23
  */
 
@@ -26,7 +27,7 @@ import lombok.NoArgsConstructor;
 public class SysRoleMenu {
 
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @ApiModelProperty(value = "ID")
     private Integer id;
 

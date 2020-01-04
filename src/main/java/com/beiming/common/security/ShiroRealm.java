@@ -48,7 +48,7 @@ public class ShiroRealm extends AuthorizingRealm {
         if (lockStatus.equals("1")) {
             throw new LockedAccountException("账号已被锁定,请联系管理员");
         }
-        if(user.getExpireTime().before(new Date())){
+        if (user.getExpireTime().before(new Date())) {
             throw new ExpiredCredentialsException("登录凭证过期,请重新登录");
         }
         SimpleAuthenticationInfo auth = new SimpleAuthenticationInfo(user, token, getName());

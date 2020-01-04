@@ -18,6 +18,7 @@ import java.util.Properties;
 /**
  * mybatis拦截器，对公共字段(创建人、创建时间、修改人、修改时间)值
  * 所有的新增修改操作必须使用实体类参数,且必须为登录状态
+ *
  * @author zhiguang
  */
 @Slf4j

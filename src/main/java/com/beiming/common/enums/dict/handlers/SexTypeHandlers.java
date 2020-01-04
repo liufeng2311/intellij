@@ -19,7 +19,7 @@ public class SexTypeHandlers extends BaseTypeHandler<SexEnum> {
 
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, SexEnum parameter, JdbcType jdbcType) throws SQLException {
-        ps.setString(i,parameter.getCode());
+        ps.setString(i, parameter.getCode());
     }
 
     @Override

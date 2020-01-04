@@ -24,34 +24,34 @@ import java.util.List;
 @EnableSwagger2
 public class SwaggerConfig {
 
-  @Value(value = "${swagger.enable}")
-  Boolean swaggerEnabled;
+    @Value(value = "${swagger.enable}")
+    Boolean swaggerEnabled;
 
-  @Bean
-  public Docket createRestApi() {
-    ParameterBuilder tokenParam = new ParameterBuilder();
-    List<Parameter> params = new ArrayList<Parameter>();
-    tokenParam.name("Authorization").description("令牌标识").modelRef(new ModelRef("string"))
-        .parameterType("header").required(true).build();
-    params.add(tokenParam.build());
-    return new Docket(DocumentationType.SWAGGER_2)
-        .select()
-        .apis(RequestHandlerSelectors.basePackage("com.beiming.modules"))
-        .paths(PathSelectors.any())
-        .build()
-        .globalOperationParameters(params)
-        .apiInfo(apiInfo())
-        .enable(swaggerEnabled)
-        .pathMapping("");
-  }
+    @Bean
+    public Docket createRestApi() {
+        ParameterBuilder tokenParam = new ParameterBuilder();
+        List<Parameter> params = new ArrayList<Parameter>();
+        tokenParam.name("Authorization").description("令牌标识").modelRef(new ModelRef("string"))
+                .parameterType("header").required(true).build();
+        params.add(tokenParam.build());
+        return new Docket(DocumentationType.SWAGGER_2)
+                .select()
+                .apis(RequestHandlerSelectors.basePackage("com.beiming.modules"))
+                .paths(PathSelectors.any())
+                .build()
+                .globalOperationParameters(params)
+                .apiInfo(apiInfo())
+                .enable(swaggerEnabled)
+                .pathMapping("");
+    }
 
 
-  private ApiInfo apiInfo() {
-    return new ApiInfoBuilder()
-        .title("数据提供服务的 API") //文档标题
-        .description("接口列表")
-        .version("1.0.0") //版本
-        .build();
-  }
+    private ApiInfo apiInfo() {
+        return new ApiInfoBuilder()
+                .title("数据提供服务的 API") //文档标题
+                .description("接口列表")
+                .version("1.0.0") //版本
+                .build();
+    }
 
 }

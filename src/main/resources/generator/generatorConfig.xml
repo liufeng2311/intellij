@@ -45,11 +45,11 @@
                              type="XMLMAPPER"/>
 
         <!--tableName对应数据库的表名  domainObjectName对应生成文件名-->
-<!--        <table tableName="sys_user" domainObjectName="SysUser"/>-->
-<!--        <table tableName="sys_menu" domainObjectName="SysMenu"/>-->
-<!--        <table tableName="sys_role" domainObjectName="SysRole"/>-->
-<!--        <table tableName="sys_role_menu" domainObjectName="SysRoleMenu"/>-->
-<!--        <table tableName="sys_user_role" domainObjectName="SysUserRole"/>-->
+        <!--        <table tableName="sys_user" domainObjectName="SysUser"/>-->
+        <!--        <table tableName="sys_menu" domainObjectName="SysMenu"/>-->
+        <!--        <table tableName="sys_role" domainObjectName="SysRole"/>-->
+        <!--        <table tableName="sys_role_menu" domainObjectName="SysRoleMenu"/>-->
+        <!--        <table tableName="sys_user_role" domainObjectName="SysUserRole"/>-->
         <table tableName="sys_dict" domainObjectName="SysDict"/>
     </context>
 </generatorConfiguration>
